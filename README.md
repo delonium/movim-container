@@ -1,8 +1,7 @@
 <div align="center">
     <h1>Movim Container</h1>
+    <h4>An officially endorsed image maintained by the community.</h4>
 </div>
-
-An officially endorsed image maintained by the community.
 
 ### Unprivileged
 
