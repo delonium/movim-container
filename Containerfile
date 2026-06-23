@@ -103,17 +103,9 @@ ENV DAEMON_DEBUG=false \
 
 WORKDIR /var/www/movim
 
-COPY composer.lock composer.json .
-RUN composer install
+COPY --from=movim-repo / .
 
-COPY .php_cs phinx.php daemon.php VERSION .
-COPY config ./config
-COPY locales ./locales
-COPY public ./public
-COPY workers ./workers
-COPY database ./database
-COPY src ./src
-COPY app ./app
+RUN composer install
 
 RUN install -o www-data -d \
  # Create local directories
