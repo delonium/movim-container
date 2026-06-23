@@ -17,7 +17,7 @@ jobs:
       - name: Check latest upstream release
         id: version
         run: |
-          TAG=$(curl -sL "https://api.github.com/repos/${UPSTREAM_REPO}/releases/latest" | jq -r '.tag_name // empty')
+          TAG=$(curl -sL "https://api.github.com/repos/movim/movim/releases/latest" | jq -r '.tag_name // empty')
           # Skip if we already built this tag
           echo "version=${TAG}" >> "${GITHUB_OUTPUT}"
 
