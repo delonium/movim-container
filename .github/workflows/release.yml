@@ -34,8 +34,8 @@ jobs:
       platforms: linux/amd64
       context: .
       file: Containerfile
-      build-contexts: |
-        movim_repo=https://github.com/movim/movim.git#refs/tags/${{ needs.detect-release.outputs.version }}
+      build-args: |
+        MOVIM_TAG=${{ needs.detect-release.outputs.version }}
       meta-images: ghcr.io/${{ github.repository }}
       meta-tags: |
         type=raw,value=${{ needs.detect-release.outputs.version }}

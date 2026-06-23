@@ -18,6 +18,8 @@ ENTRYPOINT ["/init"]
 
 FROM movim-init
 
+ARG MOVIM_TAG=master
+
 # Install Movim dependencies
 
 RUN export DEBIAN_FRONTEND=noninteractive && \
@@ -103,7 +105,7 @@ ENV DAEMON_DEBUG=false \
 
 WORKDIR /var/www/movim
 
-COPY --from=movim-repo / .
+ADD --chown=www-data https://github.com/movim/movim.git#${MOVIM_TAG} .
 
 RUN composer install
 
