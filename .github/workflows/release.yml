@@ -27,6 +27,7 @@ jobs:
     uses: docker/github-builder/.github/workflows/build.yml@v1
     permissions:
       contents: read
+      packages: write
       id-token: write
     with:
       push: true
@@ -41,6 +42,8 @@ jobs:
         type=raw,value=${{ needs.detect-release.outputs.version }}
         type=semver,pattern={{version}}
         type=raw,value=latest
+      meta-flavor: |
+        latest=false
     secrets:
       registry-auths: |
         - registry: ghcr.io
