@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Set container exit code based on Movim daemon.
+
+if (( $1 == 256 )); then
+  EXIT_CODE=$((128 + $2))
+else
+  EXIT_CODE=$1
+fi
+
+echo ${EXIT_CODE} > /run/s6-linux-init-container-results/exitcode

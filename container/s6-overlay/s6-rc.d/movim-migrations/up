@@ -1,0 +1,1 @@
+with-contenv composer -d /var/www/movim movim:migrate

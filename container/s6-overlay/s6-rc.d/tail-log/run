@@ -1,0 +1,2 @@
+#!/command/with-contenv sh
+tail -F /var/www/movim/log/errors.log /var/www/movim/log/debug.log /var/www/movim/log/info.log -q 2> /dev/null

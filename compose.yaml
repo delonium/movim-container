@@ -1,0 +1,35 @@
+services:
+  db:
+    image: 'docker.io/postgres:18.3-trixie'
+    environment:
+      POSTGRES_USER: movim
+      POSTGRES_PASSWORD: movim # Set this to match DB_PASSWORD, this is the default password for testing purposes
+      POSTGRES_DB: movim
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 2s
+  movim:
+    image: 'ghcr.io/delonium/movim-container:latest'
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      TESTING_MODE: true
+      # DAEMON_URL: https://movim.mydomain.com # Set environment variables found in .env.example here
+    ports:
+      - 8443:8443 # Testing mode makes the web server listen on port 8443, set the host-facing port to 8443 to allow running the container without root (as testing mode expects you to do by default)
+      # - 80:8080 # If running in production, the web server listens on port 8080, be sure to set up a reverse proxy in front to handle TLS
+    # volumes: # Highly recommended to persist data between container restarts
+      # - movim_cache:/var/www/movim/cache # Internal cache (templates and other system files)
+      # - movim_log:/var/www/movim/log # PHP logs
+      # - movim_public:/var/www/movim/public/cache # Public caches (pictures, CSS, Javascript, etc.)
+      # - movim_images:/var/www/movim/public/images # Profile pictures and banners
+      # - movim_picture_cache:/var/cache/picture_proxy # Picture proxy cache
+
+# volumes:
+#   movim_cache:
+#   movim_log:
+#   movim_public:
+#   movim_images:
+#   movim_picture_cache:
