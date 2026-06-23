@@ -43,6 +43,6 @@ jobs:
         type=raw,value=latest
     secrets:
       registry-auths: |
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ github.token }}
+        - registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
