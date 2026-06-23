@@ -8,7 +8,7 @@ jobs:
   detect-release:
     runs-on: ubuntu-latest
     outputs:
-      version: ${{ steps.version.outputs.version }}
+      version: ${{ steps.get-version.outputs.version }}
     permissions:
       contents: write
     steps:
