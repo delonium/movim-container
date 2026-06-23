@@ -9,6 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.version }}
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
         with:
