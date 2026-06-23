@@ -41,3 +41,7 @@ jobs:
         type=raw,value=${{ needs.detect-release.outputs.version }}
         type=semver,pattern={{version}}
         type=raw,value=latest
+      registry-auths: |
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ github.token }}
