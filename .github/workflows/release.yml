@@ -1,0 +1,43 @@
+name: Build Upstream Release
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+jobs:
+  detect-release:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-tags: true
+
+      - name: Check latest upstream release
+        id: version
+        run: |
+          TAG=$(curl -sL "https://api.github.com/repos/${UPSTREAM_REPO}/releases/latest" | jq -r '.tag_name // empty')
+          # Skip if we already built this tag
+          echo "version=${TAG}" >> "${GITHUB_OUTPUT}"
+
+  build:
+    needs: detect-release
+    if: needs.detect-release.outputs.version != ''
+    uses: docker/github-builder/.github/workflows/build.yml@v1
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      push: true
+      output: image
+      platforms: linux/amd64
+      context: .
+      file: Containerfile
+      build-contexts: |
+        movim_repo=https://github.com/movim/movim.git#refs/tags/${{ needs.detect-release.outputs.version }}
+      meta-images: ghcr.io/${{ github.repository }}
+      meta-tags: |
+        type=raw,value=${{ needs.detect-release.outputs.version }}
+        type=semver,pattern={{version}}
+        type=raw,value=latest
