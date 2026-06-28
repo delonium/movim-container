@@ -31,9 +31,9 @@ jobs:
       cache-mode: max
       meta-images: ghcr.io/${{ github.repository }}
       meta-tags: |
-        type=raw,value=${{ input.movim-tag }}
+        type=raw,value=${{ inputs.movim-tag }}
       meta-flavor: |
-        latest=${{ startsWith(input.movim-tag, 'v') }}
+        latest=${{ startsWith(inputs.movim-tag, 'v') }}
       # Do not spam sha-based image tags. See: https://github.com/docker/github-builder/issues/109
       sign: false
     secrets:
