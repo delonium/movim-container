@@ -1,29 +1,62 @@
-FROM docker.io/debian:trixie-slim AS movim-init
+# Top-level build arguments
 
-# Install s6 overlay
+ARG BASE_IMAGE=docker.io/debian:trixie-slim
+ARG S6_OVERLAY_VERSION=3.2.3.0
+
+# Automatically set target architecture
+
+ARG TARGETARCH
+
+# Platform-independent s6-overlay stage
+
+FROM ${BASE_IMAGE} AS movim-s6-noarch
+
+ARG S6_OVERLAY_VERSION
+ARG S6_OVERLAY_NOARCH_SHA256=b720f9d9340efc8bb07528b9743813c836e4b02f8693d90241f047998b4c53cf
 
 RUN export DEBIAN_FRONTEND=noninteractive && \
  apt-get update && \
  apt-get install -y --no-install-recommends xz-utils
 
-ARG S6_OVERLAY_VERSION=3.2.3.0
+ADD --checksum=sha256:${S6_OVERLAY_NOARCH_SHA256} \
+    https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-noarch.tar.xz /tmp
+RUN tar -C / -Jxpf /tmp/s6-overlay-noarch.tar.xz \
+    && rm -f /tmp/s6-overlay-noarch.tar.xz
 
-ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-noarch.tar.xz /tmp
-RUN tar -C / -Jxpf /tmp/s6-overlay-noarch.tar.xz
-
-ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-x86_64.tar.xz /tmp
-RUN tar -C / -Jxpf /tmp/s6-overlay-x86_64.tar.xz
-
+# Set entrypoint for main build stage
 ENTRYPOINT ["/init"]
 
-FROM movim-init
+# amd64 s6-overlay stage
 
-ARG MOVIM_TAG=master
+FROM movim-s6-noarch AS movim-s6-amd64
 
-# Install Movim dependencies
+ARG S6_OVERLAY_VERSION
+ARG S6_OVERLAY_AMD64_SHA256=a93f02882c6ed46b21e7adb5c0add86154f01236c93cd82c7d682722e8840563
 
-RUN export DEBIAN_FRONTEND=noninteractive && \
- apt-get install -y --no-install-recommends \
+ADD --checksum=sha256:${S6_OVERLAY_AMD64_SHA256} \
+    https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-x86_64.tar.xz /tmp
+RUN tar -C / -Jxpf /tmp/s6-overlay-x86_64.tar.xz \
+    && rm -f /tmp/s6-overlay-x86_64.tar.xz
+
+# arm64 s6-overlay stage
+
+FROM movim-s6-noarch AS movim-s6-arm64
+
+ARG S6_OVERLAY_VERSION
+ARG S6_OVERLAY_ARM64_SHA256=0952056ff913482163cc30e35b2e944b507ba1025d78f5becbb89367bf344581
+
+ADD --checksum=sha256:${S6_OVERLAY_ARM64_SHA256} \
+    https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-aarch64.tar.xz /tmp
+RUN tar -C / -Jxpf /tmp/s6-overlay-aarch64.tar.xz \
+    && rm -f /tmp/s6-overlay-aarch64.tar.xz
+
+# Main build stage
+
+FROM movim-s6-${TARGETARCH}
+
+RUN export DEBIAN_FRONTEND=noninteractive \
+ && apt-get update \
+ && apt-get install -y --no-install-recommends \
  composer \
  php \
  php-common \
@@ -61,7 +94,7 @@ COPY ./container/nginx/movim.conf /etc/nginx/sites-available/movim
 COPY ./container/nginx/mode/production.conf /etc/nginx/snippets/production.conf
 COPY ./container/nginx/mode/testing.conf /etc/nginx/snippets/testing.conf
 
-# Webserver unprivileged configuration
+# Unprivileged configuration
 
 RUN usermod -a -G ssl-cert www-data \
     && chown -R www-data: /var/log/nginx /etc/nginx \
@@ -105,6 +138,7 @@ ENV DAEMON_DEBUG=false \
 
 WORKDIR /var/www/movim
 
+ARG MOVIM_TAG
 ADD --chown=www-data https://github.com/movim/movim.git#${MOVIM_TAG} .
 
 RUN composer install
