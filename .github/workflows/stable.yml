@@ -54,9 +54,8 @@ jobs:
         with:
           fetch-tags: true
 
-      - name: Create version tag
-        env:
+      - env:
           MOVIM_TAG: ${{ needs.check-release.outputs.version }}
         run: |
           git tag -a ${MOVIM_TAG} -m "Tag release from Movim repository."
-          git push origin ${MOVIM_TAG}
+          git push origin tag ${MOVIM_TAG}
