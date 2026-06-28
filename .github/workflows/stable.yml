@@ -35,6 +35,10 @@ jobs:
     needs: check-release
     if: needs.check-release.outputs.should-build == 'true'
     uses: ./.github/workflows/build-container.yml
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
     with:
       movim-tag: ${{ needs.check-release.outputs.version }}
       publish: true
