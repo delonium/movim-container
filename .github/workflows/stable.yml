@@ -6,10 +6,11 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-publish:
+  check-release:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
+    outputs:
+      version: ${{ steps.get-version.outputs.version }}
+      should-build: ${{ steps.check-tag.outputs.should-build }}
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
@@ -25,19 +26,31 @@ jobs:
         id: check-tag
         run: |
           if [[ -n "$(git tag -l ${{ steps.get-version.outputs.version }})" ]]; then
-            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "should-build=true" >> "$GITHUB_OUTPUT"
           else
-            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "should-build=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Build and publish container image
-        if: steps.check-tag.outputs.exists == 'false'
-        uses: ./.github/workflows/build-container.yml
+  build-and-publish:
+    needs: check-release
+    if: needs.check-release.outputs.should-build == 'true'
+    uses: ./.github/workflows/build-container.yml
+    with:
+      movim-tag: ${{ needs.check-release.outputs.version }}
+      publish: true
+
+  tag-repo:
+    needs: [check-release, build-and-publish]
+    if: needs.check-release.outputs.should-build == 'true' && needs.build-and-publish.result == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
-          movim-tag: ${{ steps.get-version.outputs.version }}
-          publish: true
+          fetch-tags: true
 
       - name: Create version tag
         run: |
-          git tag ${{ steps.get-version.outputs.version }}
-          git push origin ${{ steps.get-version.outputs.version }}
+          git tag -a ${{ needs.check-release.outputs.version }} -m "Tag release from Movim repository."
+          git push origin ${{ needs.check-release.outputs.version }}
