@@ -1,0 +1,16 @@
+name: Build Master
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+build-and-publish:
+  uses: ./.github/workflows/build-container.yml
+  permissions:
+    contents: read
+    packages: write
+    id-token: write
+  with:
+    movim-tag: master
+    publish: true

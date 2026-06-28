@@ -58,5 +58,5 @@ jobs:
       - env:
           MOVIM_TAG: ${{ needs.check-release.outputs.version }}
         run: |
-          git tag -a ${MOVIM_TAG} -m "Stable build for Movim ${MOVIM_TAG}."
+          git tag ${MOVIM_TAG}
           git push origin tag ${MOVIM_TAG}
