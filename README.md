@@ -1,8 +1,11 @@
 <div align="center">
     <h1>Movim Container</h1>
     <h4>An officially endorsed image maintained by the community.</h4>
-    <a href="https://github.com/delonium/movim-container/actions/workflows/release.yml">
-        <img src="https://github.com/delonium/movim-container/actions/workflows/release.yml/badge.svg" >
+    <a href="https://github.com/delonium/movim-container/actions/workflows/stable.yml">
+        <img src="https://github.com/delonium/movim-container/actions/workflows/stable.yml/badge.svg" >
+    </a>
+    <a href="https://github.com/delonium/movim-container/actions/workflows/master.yml">
+        <img src="https://github.com/delonium/movim-container/actions/workflows/master.yml/badge.svg" >
     </a>
 </div>
 
