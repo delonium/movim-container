@@ -1,0 +1,43 @@
+name: Build Stable Release
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-tags: true
+
+      - name: Get latest Movim stable release
+        id: get-version
+        run: |
+          TAG=$(curl -sL "https://api.github.com/repos/movim/movim/releases/latest" | jq -r '.tag_name // empty')
+          echo "version=${TAG}" >> "${GITHUB_OUTPUT}"
+
+      - name: Check if already built
+        id: check-tag
+        run: |
+          if [[ -n "$(git tag -l ${{ steps.get-version.outputs.version }})" ]]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build and publish container image
+        if: steps.check-tag.outputs.exists == 'false'
+        uses: ./.github/workflows/build-container.yml
+        with:
+          movim-tag: ${{ steps.get-version.outputs.version }}
+          publish: true
+
+      - name: Create version tag
+        run: |
+          git tag ${{ steps.get-version.outputs.version }}
+          git push origin ${{ steps.get-version.outputs.version }}

@@ -1,0 +1,41 @@
+name: Build Container Image
+
+on:
+  workflow_call:
+    inputs:
+      movim-tag:
+        required: true
+        type: string
+      publish:
+        required: true
+        type: boolean
+
+jobs:
+  build:
+    uses: docker/github-builder/.github/workflows/build.yml@5f637c833aa76bc99372a1dc9a6f8bcd8056fb85 # v1.12.0
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    with:
+      push: ${{ inputs.publish }}
+      output: image
+      setup-qemu: true
+      platforms: linux/amd64,linux/arm64
+      context: .
+      file: Containerfile
+      build-args: |
+        MOVIM_TAG=${{ inputs.movim-tag }}
+      cache: true
+      cache-scope: ${{ github.repository }}
+      cache-mode: max
+      meta-images: ghcr.io/${{ github.repository }}
+      meta-tags: |
+        type=raw,value=${{ input.movim-tag }}
+      meta-flavor: |
+        latest=${{ startsWith(input.movim-tag, 'v') }}
+    secrets:
+      registry-auths: |
+        - registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
