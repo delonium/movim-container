@@ -25,7 +25,7 @@ jobs:
       - name: Check if already built
         id: check-tag
         run: |
-          if [[ -n "$(git tag -l ${{ steps.get-version.outputs.version }})" ]]; then
+          if [[ -z "$(git tag -l ${{ steps.get-version.outputs.version }})" ]]; then
             echo "should-build=true" >> "$GITHUB_OUTPUT"
           else
             echo "should-build=false" >> "$GITHUB_OUTPUT"
