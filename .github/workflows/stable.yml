@@ -79,7 +79,7 @@ jobs:
       movim-tag: ${{ needs.check-release.outputs.version }}
       publish: true
 
-  tag-repo:
+  release:
     needs: [check-release, build-and-publish]
     if: needs.check-release.outputs.should-build == 'true' && needs.build-and-publish.result == 'success'
     runs-on: ubuntu-latest
