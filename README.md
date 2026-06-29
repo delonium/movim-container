@@ -17,25 +17,20 @@ Movim is a distributed social media network built on the XMPP protocol. This rep
 * **Movim Repository**: [github.com/movim/movim](https://github.com/movim/movim)
 * **Support Chatroom**: [movim@conference.movim.eu](xmpp:movim@conference.movim.eu)
 
-## Unprivileged
+## Unprivileged 
 
 The container runs as the `www-data` user.
 
 The webserver will listen on HTTP port `8080` when running in production mode and on HTTPS port `8443` when running in testing mode.
 
+## Supported Platforms
+
+* `amd64`
+* `arm64`
+
 ## Compose File
 
 See the [compose.yaml](compose.yaml) file for a commented compose example with a Postgres database.
-
-## Tags and Versioning
-
-This repository checks for Movim stable releases weekly and builds the Movim master branch daily. Release notes contain changes to the container image between Movim stable releases.
-
-| Tag | Description |
-| --- | --- |
-| latest | The latest stable release |
-| v0.34.1 | Pinned stable release |
-| master | Development branch rebuilt daily |
 
 ## Quickstart and Testing Mode
 
@@ -53,6 +48,22 @@ After a few moments, you can access Movim in your browser at the following URL:
     https://127.0.0.1:8443
 
 Note that testing mode uses a self-signed certificate, so you need to accept the security warning in your browser before opening the url.
+
+## Tags and Versioning
+
+This repository checks for Movim stable releases weekly and builds the Movim master branch daily. Release notes contain changes to the container image between Movim stable releases.
+
+| Tag | Description |
+| --- | --- |
+| latest | The latest stable release |
+| v0.34.1 | Pinned stable release |
+| master | Development branch rebuilt daily |
+
+### Revisions
+
+This repository tags releases based on how and when the Movim repository tags releases. The only time release tags diverge is when a previously-built stable release is rebuilt with the latest changes from this repository. When this happens, a revision is published and the corresponding stable tag in the container registry is updated.
+
+Revision releases look like this: `v0.34.1-revN`, where `N` is the incremented revision number.
 
 ## Configuration
 
