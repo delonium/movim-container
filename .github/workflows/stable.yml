@@ -112,3 +112,6 @@ jobs:
         with:
           tag_name: ${{ steps.tag-repo.outputs.release-tag }}
           generate_release_notes: true
+          append_body: true
+          body: |
+            Movim release notes [can be found here](https://github.com/movim/movim/releases/tag/${{ needs.check-release.outputs.version }}).
