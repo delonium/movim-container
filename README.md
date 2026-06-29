@@ -11,7 +11,7 @@
 
 ## About
 
-Movim is a distributed social media network built on the XMPP protocol. This repository is a community effort to package Movim as an OCI container that can be deployed with Docker and Podman.
+Movim is a distributed social network built on the XMPP protocol. This repository is a community effort to package Movim as an OCI container that can be deployed with Docker and Podman.
 
 * **Movim Website**: [movim.eu](https://movim.eu)
 * **Movim Repository**: [github.com/movim/movim](https://github.com/movim/movim)
