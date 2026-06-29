@@ -90,7 +90,9 @@ jobs:
         with:
           fetch-tags: true
 
-      - env:
+      - name: Tag repository
+        id: tag-repo
+        env:
           REVISION_TAG: ${{ needs.check-release.outputs.revision-tag }}
           MOVIM_TAG: ${{ needs.check-release.outputs.version }}
         run: |
@@ -102,3 +104,11 @@ jobs:
 
           git tag ${REPO_TAG}
           git push origin tag ${REPO_TAG}
+
+          echo "release-tag=${REPO_TAG}" >> "${GITHUB_OUTPUT}"
+
+      - name: Make release
+        uses: softprops/action-gh-release@718ea10b132b3b2eba29c1007bb80653f286566b # v3.0.1
+        with:
+          tag_name: ${{ steps.tag-repo.outputs.release-tag }}
+          generate_release_notes: true
