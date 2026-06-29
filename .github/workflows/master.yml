@@ -7,7 +7,7 @@ on:
     paths:
       - '!README.md'
       - '!compose.yaml'
-      - '!.github/**/*.yml'
+      - '!.github/**'
       - '.github/workflows/master.yml'
   push:
     branches:
@@ -15,7 +15,7 @@ on:
     paths:
       - '!README.md'
       - '!compose.yaml'
-      - '!.github/**/*.yml'
+      - '!.github/**'
       - '.github/workflows/master.yml'
   workflow_dispatch:
 
