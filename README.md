@@ -27,6 +27,16 @@ The webserver will listen on HTTP port `8080` when running in production mode an
 
 See the [compose.yaml](compose.yaml) file for a commented compose example with a Postgres database.
 
+## Tags and Versioning
+
+This repository checks for Movim stable releases weekly and builds the Movim master branch daily. Release notes contain changes to the container image between Movim stable releases.
+
+| Tag | Description |
+| --- | --- |
+| latest | The latest stable release |
+| v0.34.1 | Pinned stable release |
+| master | Development branch rebuilt daily |
+
 ## Quickstart and Testing Mode
 
 > [!WARNING]
