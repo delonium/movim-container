@@ -4,12 +4,19 @@ on:
   schedule:
     - cron: '0 6 * * *'
   pull_request:
+    paths:
+      - '!README.md'
+      - '!compose.yaml'
+      - '!.github/**/*.yml'
+      - '.github/workflows/master.yml'
   push:
     branches:
       - main
-    paths-ignore:
-      - 'README.md'
-      - 'compose.yaml'
+    paths:
+      - '!README.md'
+      - '!compose.yaml'
+      - '!.github/**/*.yml'
+      - '.github/workflows/master.yml'
   workflow_dispatch:
 
 jobs:
