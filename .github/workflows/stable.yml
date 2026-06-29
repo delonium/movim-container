@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       build-revision:
-        description: Build and republish latest stable release with latest container definition.
+        description: Rebuild and publish revision with latest container image.
         required: false
         type: boolean
         default: false
@@ -42,6 +42,7 @@ jobs:
             # Only handle building a revision if the stable release was built at least once.
             if ${BUILD_REVISION}; then
               LATEST_REVISION_TAG=$(git tag -l "${MOVIM_TAG}-rev*" | sort -V | tail -1)
+              REVISION=$(($(git tag -l "${MOVIM_TAG}-rev*" | wc -l) + 1))
 
               # Build a revision only if either:
               # 1) There is no revision tag for the latest stable Movim release.
@@ -52,8 +53,6 @@ jobs:
                 HEAD_SHA=$(git rev-parse HEAD)
 
                 if [[ "${TAG_SHA}" != "${HEAD_SHA}" ]]; then
-                  REVISION=$(($(git tag -l "${MOVIM_TAG}-rev*" | wc -l) + 1))
-
                   echo "should-build=true" >> "${GITHUB_OUTPUT}"
                   echo "revision-tag=${MOVIM_TAG}-rev${REVISION}" >> "${GITHUB_OUTPUT}"
                   exit 0
