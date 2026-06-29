@@ -33,7 +33,7 @@ jobs:
       meta-flavor: |
         latest=${{ startsWith(inputs.movim-tag, 'v') }}
       # Do not spam sha-based image tags. See: https://github.com/docker/github-builder/issues/109
-      sign: "false"
+      sign: false
     secrets:
       registry-auths: |
         - registry: ghcr.io
