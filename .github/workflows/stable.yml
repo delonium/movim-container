@@ -38,7 +38,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-      id-token: write
+      #id-token: write
     with:
       movim-tag: ${{ needs.check-release.outputs.version }}
       publish: true
