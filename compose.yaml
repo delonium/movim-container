@@ -15,6 +15,7 @@ services:
         condition: service_healthy
     environment:
       DB_HOST: db
+      DB_PASSWORD: movim # This should be changed in production!
       TESTING_MODE: true
       # DAEMON_URL: https://movim.mydomain.com # Set environment variables found in .env.example here
     ports:

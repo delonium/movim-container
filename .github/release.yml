@@ -1,0 +1,8 @@
+changelog:
+  exclude:
+    authors:
+      - github-actions
+  categories:
+    - title: Changes
+      labels:
+        - '*'

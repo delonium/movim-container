@@ -131,8 +131,7 @@ ENV DAEMON_DEBUG=false \
     DB_PORT=5432 \
     DB_DRIVER=pgsql \
     DB_DATABASE=movim \
-    DB_USERNAME=movim \
-    DB_PASSWORD=movim
+    DB_USERNAME=movim
 
 # Movim files
 

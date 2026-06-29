@@ -11,6 +11,11 @@ if [[ ! -v DB_HOST ]]; then
     exit 1
 fi
 
+if [[ ! -v DB_PASSWORD ]]; then
+    echo "The DB_PASSWORD environment variable must be set." 1>&2
+    exit 1
+fi
+
 if [[ ! -v DAEMON_URL ]]; then
     echo "The DAEMON_URL environment variable must be set." 1>&2
     exit 1
