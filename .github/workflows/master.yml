@@ -3,10 +3,14 @@ name: Build Master
 on:
   schedule:
     - cron: '0 6 * * *'
+  pull_request:
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
-  build-and-publish:
+  build:
     uses: ./.github/workflows/build-container.yml
     permissions:
       contents: read
@@ -14,4 +18,4 @@ jobs:
       id-token: write
     with:
       movim-tag: master
-      publish: true
+      publish: ${{ github.event_name != 'pull_request' && github.event_name != 'push' }}
