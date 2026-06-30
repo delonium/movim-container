@@ -49,6 +49,12 @@ After a few moments, you can access Movim in your browser at the following URL:
 
 Note that testing mode uses a self-signed certificate, so you need to accept the security warning in your browser before opening the url.
 
+### Running Daemon Commands
+
+You can run Movim daemon commands by using `exec` on the running container. For example, here is how to set an admin when deploying Movim via the `compose.yaml` file:
+
+    podman compose exec movim php daemon.php setAdmin <JID>
+
 ## Tags and Versioning
 
 This repository checks for Movim stable releases weekly and builds the Movim master branch daily. Release notes contain changes to the container image between Movim stable releases.
