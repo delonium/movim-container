@@ -17,6 +17,15 @@ Movim is a distributed social network built on the XMPP protocol. This repositor
 * **Movim Repository**: [github.com/movim/movim](https://github.com/movim/movim)
 * **Support Chatroom**: [movim@conference.movim.eu](xmpp:movim@conference.movim.eu)
 
+## Architecture Overview
+
+Movim requires a *webserver*, *PHP process manager (php-fpm)*, *database*, and *XMPP server*. This container image packages the webserver and php-fpm to host the Movim source. A [compose file](#compose-file) is provided to showcase a basic deployment **without an XMPP server**.
+
+> [!NOTE]
+> Movim does not include an XMPP server. If you wish to self-host Movim with an account under your own domain, consider hosting an XMPP server like [ejabberd](https://ejabberd.im/) (recommended) or [Prosody](https://prosody.im/).
+
+If you are hosting an XMPP server, please check out the [Movim Wiki](https://github.com/movim/movim/wiki) for configuring your server to support all of Movim's features.
+
 ## Unprivileged 
 
 The container runs as the `www-data` user.
