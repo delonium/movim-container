@@ -1,7 +1,7 @@
 <div align="center">
     <h1>Movim Container</h1>
     <h4>An officially endorsed image maintained by the community.</h4>
-    <img src="https://img.shields.io/github/v/release/delonium/movim-container?style=flat-square&label=Movim%20Release&color=%233D36C0">
+    <img src="https://img.shields.io/github/v/release/delonium/movim-container?filter=!*-rev*&style=flat-square&label=Movim%20Release&color=%233D36C0">
     <a href="https://github.com/delonium/movim-container/actions/workflows/stable.yml">
         <img src="https://img.shields.io/github/actions/workflow/status/delonium/movim-container/stable.yml?style=flat-square&label=Latest">
     </a>
