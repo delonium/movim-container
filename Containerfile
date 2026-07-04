@@ -148,9 +148,9 @@ RUN install -o www-data -d \
  log \
  public/cache \
  public/images \
+ public/emojis \
  # Create picture proxy cache storage path
- /var/cache/picture_proxy \
- && chown -R www-data: .
+ /var/cache/picture_proxy
 
 # Run s6 as unprivileged user
 

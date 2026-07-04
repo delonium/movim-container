@@ -115,6 +115,7 @@ The following paths in the container should be mounted in a named volume or bind
 | `/var/www/movim/log` | PHP logs |
 | `/var/www/movim/public/cache` | Public caches (pictures, CSS, Javascript, etc.) |
 | `/var/www/movim/public/images` | Profile pictures and banners |
+| `/var/www/movim/public/emojis` | Custom emoji packs |
 | `/var/cache/picture_proxy` | [Picture proxy cache](https://github.com/movim/movim/blob/master/INSTALL.md#53-picture-proxy-cache) storage |
 
 > [!TIP]

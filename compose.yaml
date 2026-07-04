@@ -26,6 +26,7 @@ services:
       # - movim_log:/var/www/movim/log # PHP logs
       # - movim_public:/var/www/movim/public/cache # Public caches (pictures, CSS, Javascript, etc.)
       # - movim_images:/var/www/movim/public/images # Profile pictures and banners
+      # - movim_emojis:/var/www/movim/public/emojis # Custom emoji packs
       # - movim_picture_cache:/var/cache/picture_proxy # Picture proxy cache
 
 # volumes:
