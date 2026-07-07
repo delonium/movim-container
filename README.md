@@ -33,6 +33,8 @@ The container runs as the `www-data` user.
 
 The webserver will listen on HTTP port `8080` when running in production mode and on HTTPS port `8443` when running in testing mode.
 
+Permissions will not be corrected when mounting data from an existing Movim installation. Please check out [this section](#mounting-existing-data).
+
 ## Supported Platforms
 
 * `amd64`
@@ -120,3 +122,13 @@ The following paths in the container should be mounted in a named volume or bind
 
 > [!TIP]
 > See the comments in the example [compose.yaml](compose.yaml) file for reference on how to do this in a compose file.
+
+### Mounting Existing Data
+
+This container is based on Debian and runs as the `www-data` user with uid/gid `33:33`. As a result, you need to ensure that data from an existing Movim installation has correct ownership.
+
+If you're using Docker or Podman as root, be sure to correct the ownership before bind-mounting like so:
+
+    chown -R 33:33 cache public/cache # and so on ...
+
+When using Podman, you can also mount the data with the [`:U` option](https://docs.podman.io/en/latest/markdown/podman-run.1.html#volume-v-source-volume-host-dir-container-dir-options) to automatically chown your data.
