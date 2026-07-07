@@ -34,4 +34,5 @@ services:
 #   movim_log:
 #   movim_public:
 #   movim_images:
+#   movim_emojis:
 #   movim_picture_cache:
