@@ -1,0 +1,40 @@
+[Unit]
+Description=Movim PostgreSQL Database
+
+[Container]
+Image=docker.io/postgres:18.3-trixie
+AutoUpdate=registry
+
+# Container name will be 'movim-db'
+ContainerName=%N
+
+# Persist database data
+Volume=movim-db.volume:/var/lib/postgresql/data
+
+# Network used by both Movim and Postgres.
+Network=movim.network
+
+# Environment variable configuration (testing mode defaults)
+Environment=POSTGRES_USER=movim
+Environment=POSTGRES_DB=movim
+Environment=POSTGRES_PASSWORD=movim
+
+# You can also use an environment file.
+# EnvironmentFile=/path-to/env
+
+# Using Podman secrets
+# Secret=movim-db-password,type=env,target=POSTGRES_PASSWORD
+
+# Health check
+Notify=healthy
+HealthCmd=pg_isready
+HealthInterval=10s
+HealthRetries=5
+HealthStartPeriod=15s
+HealthTimeout=5s
+
+[Service]
+Restart=on-failure
+
+[Install]
+WantedBy=default.target

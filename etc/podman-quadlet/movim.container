@@ -1,0 +1,57 @@
+[Unit]
+Description=Movim XMPP Web Client
+Requires=movim-db.service
+After=movim-db.service
+
+[Container]
+Image=ghcr.io/delonium/movim-container:latest
+AutoUpdate=registry
+
+# Container name will be 'movim'
+ContainerName=%N
+
+# All volumes for persistence.
+Volume=movim-cache.volume:/var/www/movim/cache
+Volume=movim-public.volume:/var/www/movim/public/cache
+Volume=movim-images.volume:/var/www/movim/public/images
+Volume=movim-emojis.volume:/var/www/movim/public/emojis
+Volume=movim-log.volume:/var/www/movim/log
+Volume=movim-proxy-cache.volume:/var/cache/picture_proxy
+
+# If you wish to bind mount data from an existing Movim installation:
+#
+# The :U mount option chowns the mounted data on the host to match the running
+# user in the container (www-data).
+#
+# Add the :Z mount option if your host os is using SELinux, like Fedora.
+#
+# Volume=/path-to/movim/cache:/var/www/movim/cache:U
+# Volume=/path-to/movim/log:/var/www/movim/log:U
+# Volume=/path-to/movim/public/cache:/var/www/movim/public/cache:U
+# Volume=/path-to/movim/public/images:/var/www/movim/public/images:U
+# Volume=/path-to/movim/public/emojis:/var/www/movim/public/emojis:U
+#
+# Then, mount the picture proxy as a named volume like above.
+
+# Network used by both Movim and Postgres.
+Network=movim.network
+
+# Add your reverse proxy network if, for example, Traefik is being used.
+# Network=proxy.network
+
+# Environment variable configuration (testing mode defaults)
+Environment=DB_HOST=movim-db
+Environment=DB_PASSWORD=movim
+Environment=TESTING_MODE=true
+
+# You can also use an environment file.
+# EnvironmentFile=/path-to/env
+
+# Using Podman secrets
+# Secret=movim-db-password,type=env,target=DB_PASSWORD
+
+[Service]
+Restart=on-failure
+
+[Install]
+WantedBy=default.target

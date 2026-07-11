@@ -44,6 +44,10 @@ Permissions will not be corrected when mounting data from an existing Movim inst
 
 See the [compose.yaml](compose.yaml) file for a commented compose example with a Postgres database.
 
+## Podman Quadlets
+
+See the [Podman Quadlets README](etc/podman-quadlet/README.md) for a collection of sample configuration files.
+
 ## Quickstart and Testing Mode
 
 > [!WARNING]
