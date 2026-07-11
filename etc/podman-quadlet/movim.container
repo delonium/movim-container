@@ -36,8 +36,16 @@ Volume=movim-proxy-cache.volume:/var/cache/picture_proxy
 # Network used by both Movim and Postgres.
 Network=movim.network
 
-# Add your reverse proxy network if, for example, Traefik is being used.
+# Publish port 8443 on the host for testing mode.
+PublishPort=8443:8443
+# Ideally, a reverse proxy container should handle TLS without port publishing.
 # Network=proxy.network
+
+# As an example, you can use Traefik in production like so:
+# Label=traefik.enable="true"
+# Label=traefik.http.routers.movim.rule="Host(`movim.mydomain.com`)"
+# Label=traefik.http.routers.movim.tls=true
+# Label=traefik.http.services.movim.loadbalancer.server.port=8080
 
 # Environment variable configuration (testing mode defaults)
 Environment=DB_HOST=movim-db
