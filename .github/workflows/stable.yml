@@ -16,8 +16,10 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.get-version.outputs.version }}
+      release-name: ${{ steps.get-version.outputs.name }}
       should-build: ${{ steps.check-tag.outputs.should-build }}
       revision-tag: ${{ steps.check-tag.outputs.revision-tag }}
+      revision-number: ${{ steps.check-tag.outputs.revision-number }}
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
@@ -26,8 +28,13 @@ jobs:
       - name: Get latest Movim stable release
         id: get-version
         run: |
-          TAG=$(curl -sL "https://api.github.com/repos/movim/movim/releases/latest" | jq -r '.tag_name // empty')
+          RELEASE_JSON=$(curl -sL "https://api.github.com/repos/movim/movim/releases/latest")
+          
+          TAG=$(jq -r '.tag_name // empty' <<<${RELEASE_JSON})
           echo "version=${TAG}" >> "${GITHUB_OUTPUT}"
+
+          NAME=$(jq -r '.name // empty' <<<${RELEASE_JSON})
+          echo "name=${NAME}" >> "${GITHUB_OUTPUT}"
 
       - name: Determine if container should be built and handle revisions
         id: check-tag
@@ -55,11 +62,13 @@ jobs:
                 if [[ "${TAG_SHA}" != "${HEAD_SHA}" ]]; then
                   echo "should-build=true" >> "${GITHUB_OUTPUT}"
                   echo "revision-tag=${MOVIM_TAG}-rev${REVISION}" >> "${GITHUB_OUTPUT}"
+                  echo "revision-number=${REVISION}" >> "${GITHUB_OUTPUT}"
                   exit 0
                 fi
               else
                 echo "should-build=true" >> "${GITHUB_OUTPUT}"
                 echo "revision-tag=${MOVIM_TAG}-rev${REVISION}" >> "${GITHUB_OUTPUT}"
+                echo "revision-number=${REVISION}" >> "${GITHUB_OUTPUT}"
                 exit 0
               fi
             fi
@@ -94,12 +103,16 @@ jobs:
         id: tag-repo
         env:
           REVISION_TAG: ${{ needs.check-release.outputs.revision-tag }}
+          REVISION_NUM: ${{ needs.check-release.outputs.revision-number }}
           MOVIM_TAG: ${{ needs.check-release.outputs.version }}
+          RELEASE_NAME: ${{ needs.check-release.outputs.release-name }}
         run: |
           if [[ -n "${REVISION_TAG}" ]]; then
             REPO_TAG=${REVISION_TAG}
+            echo "release-name=${RELEASE_NAME} Revision ${REVISION_NUM}" >> "${GITHUB_OUTPUT}"
           else
             REPO_TAG=${MOVIM_TAG}
+            echo "release-name=${RELEASE_NAME}" >> "${GITHUB_OUTPUT}"
           fi
 
           git tag ${REPO_TAG}
@@ -110,8 +123,9 @@ jobs:
       - name: Make release
         uses: softprops/action-gh-release@718ea10b132b3b2eba29c1007bb80653f286566b # v3.0.1
         with:
+          name: ${{ steps.tag-repo.outputs.release-name }}
           tag_name: ${{ steps.tag-repo.outputs.release-tag }}
           generate_release_notes: true
           append_body: true
           body: |
-            Movim release notes [can be found here](https://github.com/movim/movim/releases/tag/${{ needs.check-release.outputs.version }}).
+            **Movim release notes**: [${{ needs.check-release.outputs.version }}](https://github.com/movim/movim/releases/tag/${{ needs.check-release.outputs.version }}).
