@@ -37,7 +37,7 @@ Volume=movim-proxy-cache.volume:/var/cache/picture_proxy
 Network=movim.network
 
 # Publish port 8443 on the host for testing mode.
-PublishPort=8443:8443
+PublishPort=8443:443
 # Ideally, a reverse proxy container should handle TLS without port publishing.
 # Network=proxy.network
 
@@ -45,7 +45,7 @@ PublishPort=8443:8443
 # Label=traefik.enable="true"
 # Label=traefik.http.routers.movim.rule="Host(`movim.mydomain.com`)"
 # Label=traefik.http.routers.movim.tls=true
-# Label=traefik.http.services.movim.loadbalancer.server.port=8080
+# Label=traefik.http.services.movim.loadbalancer.server.port=80
 
 # Environment variable configuration (testing mode defaults)
 Environment=DB_HOST=movim-db

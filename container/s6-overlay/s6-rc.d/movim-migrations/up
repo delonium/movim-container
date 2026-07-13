@@ -1,1 +1,2 @@
-with-contenv composer -d /var/www/movim movim:migrate
+with-contenv
+s6-setuidgid www-data composer -d /var/www/movim movim:migrate

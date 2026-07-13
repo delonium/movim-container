@@ -27,14 +27,6 @@ Movim requires a *webserver*, *PHP process manager (php-fpm)*, *database*, and *
 
 If you are hosting an XMPP server, please check out the [Movim Wiki](https://github.com/movim/movim/wiki) for configuring your server to support all of Movim's features.
 
-## Unprivileged 
-
-The container runs as the `www-data` user.
-
-The webserver will listen on HTTP port `8080` when running in production mode and on HTTPS port `8443` when running in testing mode.
-
-Permissions will not be corrected when mounting data from an existing Movim installation. Please check out [this section](#mounting-existing-data).
-
 ## Supported Platforms
 
 * `amd64`
@@ -104,12 +96,48 @@ The only **required** environment variables are:
 
 ### Container-Only Environment Variables
 
-`TESTING_MODE` (not set by default)
+#### General
 
-If not empty, the Movim container is ran with a self-signed certificate for local testing and its web server will listen on port `8443` instead of `8080`. Also, the following environment variables are set with the given values, unless otherwise specified by the user already:
+`TESTING_MODE` **(not set by default)**
+
+If not empty, the Movim container is ran with a self-signed certificate for local testing and its web server will listen on port `443` instead of `80`. Also, the following environment variables are set with the given values, unless otherwise specified by the user already:
 * `DAEMON_URL=https://127.0.0.1:8443`
 * `DAEMON_DEBUG=true`
 * `DAEMON_VERBOSE=true`
+
+`CHOWN_DATA` **(default: `1`)**
+
+If set to `1`, the container will check the ownership of its data directories (see the [Data Persistence section](#data-persistence)) and chown them recursively as necessary. This is mainly useful for mounting data from an existing Movim installation.
+
+#### Tweaks
+
+You can adjust common PHP and NGINX configuration options.
+
+<details>
+<summary>Tweak Variables</summary>
+    
+| Variable | Default |
+| --- | --- |
+| PHP_MEMORY_LIMIT | 256M |
+| PHP_UPLOAD_MAX_FILESIZE | 100M |
+| PHP_POST_MAX_SIZE | 100M |
+| PHP_OPCACHE_MEMORY | 256 |
+| PHP_FPM_PM_MAX_CHILDREN | 20 |
+| PHP_FPM_PM_START_SERVERS | 2 |
+| PHP_FPM_PM_MIN_SPARE_SERVERS | 1 |
+| PHP_FPM_PM_MAX_SPARE_SERVERS | 3 |
+| PHP_FPM_PM_MAX_REQUESTS | 500 |
+| NGINX_CLIENT_MAX_BODY_SIZE | 100M |
+
+</details>
+
+#### Convenience Tweaks
+
+`MOVIM_UPLOAD_MAX_FILESIZE` **(not set by default)**
+
+If not empty, configures both NGINX and PHP with a maximum uploaded file size. This is the same as setting the following tweaks to the same value: `PHP_UPLOAD_MAX_FILESIZE`, `PHP_POST_MAX_SIZE`, and `NGINX_CLIENT_MAX_BODY_SIZE`.
+
+For example, if you wish to only allow file uploads under 80M, set this tweak to `80M`.
 
 ## Data Persistence
 
@@ -129,10 +157,6 @@ The following paths in the container should be mounted in a named volume or bind
 
 ### Mounting Existing Data
 
-This container is based on Debian and runs as the `www-data` user with uid/gid `33:33`. As a result, you need to ensure that data from an existing Movim installation has correct ownership.
+This container is based on Debian and runs Movim as the `www-data` user with uid/gid `33:33`. The container will automatically correct ownership as necessary upon startup (see the `CHOWN_DATA` variable in the [Configuration section](#container-only-environment-variables)).
 
-If you're using Docker or Podman as root, be sure to correct the ownership before bind-mounting like so:
-
-    chown -R 33:33 cache public/cache # and so on ...
-
-When using Podman, you can also mount the data with the [`:U` option](https://docs.podman.io/en/latest/markdown/podman-run.1.html#volume-v-source-volume-host-dir-container-dir-options) to automatically chown your data.
+You can disable `CHOWN_DATA` by setting it to `0` if you wish to correct the ownership of bind mounts manually.

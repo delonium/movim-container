@@ -19,8 +19,8 @@ services:
       TESTING_MODE: true
       # DAEMON_URL: https://movim.mydomain.com # Set environment variables found in .env.example here
     ports:
-      - 8443:8443 # Testing mode makes the web server listen on port 8443, set the host-facing port to 8443 to allow running the container without root (as testing mode expects you to do by default)
-      # - 80:8080 # If running in production, the web server listens on port 8080, be sure to set up a reverse proxy in front to handle TLS
+      - 8443:443 # Testing mode makes the web server listen on port 443, set the host-facing port to 8443 to allow running the container without root (as testing mode expects you to do by default)
+      # - 80:80 # If running in production, the web server listens on port 80, be sure to set up a reverse proxy in front to handle TLS
     # volumes: # Highly recommended to persist data between container restarts
       # - movim_cache:/var/www/movim/cache # Internal cache (templates and other system files)
       # - movim_log:/var/www/movim/log # PHP logs
