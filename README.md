@@ -115,6 +115,7 @@ You can adjust common PHP and NGINX configuration options.
 
 <details>
 <summary>Tweak Variables</summary>
+    
 | Variable | Default |
 | --- | --- |
 | PHP_MEMORY_LIMIT | 256M |
@@ -127,6 +128,7 @@ You can adjust common PHP and NGINX configuration options.
 | PHP_FPM_PM_MAX_SPARE_SERVERS | 3 |
 | PHP_FPM_PM_MAX_REQUESTS | 500 |
 | NGINX_CLIENT_MAX_BODY_SIZE | 100M |
+
 </details>
 
 #### Convenience Tweaks
