@@ -98,14 +98,14 @@ The only **required** environment variables are:
 
 #### General
 
-`TESTING_MODE` (not set by default)
+`TESTING_MODE` **(not set by default)**
 
 If not empty, the Movim container is ran with a self-signed certificate for local testing and its web server will listen on port `443` instead of `80`. Also, the following environment variables are set with the given values, unless otherwise specified by the user already:
 * `DAEMON_URL=https://127.0.0.1:8443`
 * `DAEMON_DEBUG=true`
 * `DAEMON_VERBOSE=true`
 
-`CHOWN_DATA` (default: `1`)
+`CHOWN_DATA` **(default: `1`)**
 
 If set to `1`, the container will check the ownership of its data directories (see the [Data Persistence section](#data-persistence)) and chown them recursively as necessary. This is mainly useful for mounting data from an existing Movim installation.
 
@@ -133,7 +133,7 @@ You can adjust common PHP and NGINX configuration options.
 
 #### Convenience Tweaks
 
-`MOVIM_UPLOAD_MAX_FILESIZE` (not set by default)
+`MOVIM_UPLOAD_MAX_FILESIZE` **(not set by default)**
 
 If not empty, configures both NGINX and PHP with a maximum uploaded file size. This is the same as setting the following tweaks to the same value: `PHP_UPLOAD_MAX_FILESIZE`, `PHP_POST_MAX_SIZE`, and `NGINX_CLIENT_MAX_BODY_SIZE`.
 
