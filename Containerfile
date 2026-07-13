@@ -81,46 +81,37 @@ COPY ./container/s6-overlay/s6-rc.d/movim-migrations/ /etc/s6-overlay/s6-rc.d/mo
 COPY ./container/s6-overlay/s6-rc.d/movim-daemon/ /etc/s6-overlay/s6-rc.d/movim-daemon/
 COPY ./container/s6-overlay/s6-rc.d/php-fpm/ /etc/s6-overlay/s6-rc.d/php-fpm/
 COPY ./container/s6-overlay/s6-rc.d/nginx/ /etc/s6-overlay/s6-rc.d/nginx/
+COPY ./container/s6-overlay/s6-rc.d/render-configs/ /etc/s6-overlay/s6-rc.d/render-configs/
+COPY ./container/s6-overlay/s6-rc.d/chown-data/ /etc/s6-overlay/s6-rc.d/chown-data/
 COPY ./container/s6-overlay/s6-rc.d/tail-log/ /etc/s6-overlay/s6-rc.d/tail-log/
 RUN touch /etc/s6-overlay/s6-rc.d/user/contents.d/movim-migrations
 RUN touch /etc/s6-overlay/s6-rc.d/user/contents.d/movim-daemon
 RUN touch /etc/s6-overlay/s6-rc.d/user/contents.d/php-fpm
 RUN touch /etc/s6-overlay/s6-rc.d/user/contents.d/nginx
+RUN touch /etc/s6-overlay/s6-rc.d/user/contents.d/render-configs
+RUN touch /etc/s6-overlay/s6-rc.d/user/contents.d/chown-data
 RUN touch /etc/s6-overlay/s6-rc.d/user/contents.d/tail-log
+
+# Scripts
+
+COPY --chmod=0500 ./container/scripts/render-configs.sh /bin/render-configs.sh
+COPY --chmod=0500 ./container/scripts/chown-data.sh /bin/chown-data.sh
 
 # Webserver configuration
 
-COPY ./container/nginx/movim.conf /etc/nginx/sites-available/movim
+ENV NGINX_CONF_TEMPLATE=/etc/templates/nginx/movim.conf
+COPY ./container/nginx/movim.conf.template ${NGINX_CONF_TEMPLATE}
+
 COPY ./container/nginx/mode/production.conf /etc/nginx/snippets/production.conf
 COPY ./container/nginx/mode/testing.conf /etc/nginx/snippets/testing.conf
 
-# Unprivileged configuration
-
-RUN usermod -a -G ssl-cert www-data \
-    && chown -R www-data: /var/log/nginx /etc/nginx \
-    && sed -i '/user www-data;/d' /etc/nginx/nginx.conf \
-    && sed -i 's,/run/nginx.pid,/tmp/nginx.pid,' /etc/nginx/nginx.conf \
-    && sed -i '/^http {/a \
-        proxy_temp_path /tmp/proxy_temp;\n \
-        client_body_temp_path /tmp/client_temp;\n \
-        fastcgi_temp_path /tmp/fastcgi_temp;\n \
-        uwsgi_temp_path /tmp/uwsgi_temp;\n \
-        scgi_temp_path /tmp/scgi_temp;\n \
-    ' /etc/nginx/nginx.conf \
-    && FPM_CONF=$(find /etc/php -type f -name php-fpm.conf) \
-    && sed -i 's,error_log = .*,error_log = /proc/self/fd/2,' ${FPM_CONF}
-
 # PHP configuration
 
-COPY ./container/movim-fpm.conf /etc/php/pool.d/movim.conf
-RUN FPM_POOL=$(find /etc/php -type d -name pool.d -not -path /etc/php/pool.d) \
-    && rm -f ${FPM_POOL}/* \
-    && ln -s /etc/php/pool.d/movim.conf ${FPM_POOL}/movim.conf
+ENV PHP_FPM_CONF_TEMPLATE=/etc/templates/php/movim-fpm.conf
+COPY ./container/php/movim-fpm.conf.template ${PHP_FPM_CONF_TEMPLATE}
 
-COPY ./container/movim.ini /etc/php/conf.d/movim.ini
-RUN AVAILABLE_MODULES=$(find /etc/php -type d -name mods-available) \
-    && ln -s /etc/php/conf.d/movim.ini ${AVAILABLE_MODULES}/movim.ini \
-    && phpenmod movim
+ENV PHP_CONF_TEMPLATE=/etc/templates/php/movim.ini
+COPY ./container/php/movim.ini.template ${PHP_CONF_TEMPLATE}
 
 RUN ln -s $(find /usr/sbin -name "php-fpm*") /usr/bin/php-fpm
 
@@ -131,7 +122,18 @@ ENV DAEMON_DEBUG=false \
     DB_PORT=5432 \
     DB_DRIVER=pgsql \
     DB_DATABASE=movim \
-    DB_USERNAME=movim
+    DB_USERNAME=movim \
+    CHOWN_DATA=1 \
+    PHP_MEMORY_LIMIT=256M \
+    PHP_UPLOAD_MAX_FILESIZE=100M \
+    PHP_POST_MAX_SIZE=100M \
+    PHP_OPCACHE_MEMORY=256 \
+    NGINX_CLIENT_MAX_BODY_SIZE=100M \
+    PHP_FPM_PM_MAX_CHILDREN=20 \
+    PHP_FPM_PM_START_SERVERS=2 \
+    PHP_FPM_PM_MIN_SPARE_SERVERS=1 \
+    PHP_FPM_PM_MAX_SPARE_SERVERS=3 \
+    PHP_FPM_PM_MAX_REQUESTS=500
 
 # Movim files
 
@@ -154,6 +156,6 @@ RUN install -o www-data -d \
  # Chown the working directory
  && chown -R www-data: .
 
-# Run s6 as unprivileged user
+# s6-overlay will drop privileges
 
-USER www-data
+USER root

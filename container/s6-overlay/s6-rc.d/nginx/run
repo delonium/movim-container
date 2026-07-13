@@ -1,11 +1,2 @@
 #!/command/with-contenv bash
-
-if [[ -v TESTING_MODE ]]; then
-    export CONTAINER_MODE=testing
-else
-    export CONTAINER_MODE=production
-fi
-
-envsubst '${CONTAINER_MODE}' < /etc/nginx/sites-available/movim > /etc/nginx/sites-available/default
-
 nginx -g "daemon off;"

@@ -1,1 +1,5 @@
+render-configs
 movim-migrations
+chown-data
+nginx
+php-fpm
