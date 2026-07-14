@@ -1,5 +1,22 @@
 #!/bin/bash
 
+# Required environment variables
+
+if [[ ! -v DB_HOST ]]; then
+    echo "The DB_HOST environment variable must be set." 1>&2
+    exit 1
+fi
+
+if [[ ! -v DB_PASSWORD ]]; then
+    echo "The DB_PASSWORD environment variable must be set." 1>&2
+    exit 1
+fi
+
+if [[ ! -v DAEMON_URL ]]; then
+    echo "The DAEMON_URL environment variable must be set." 1>&2
+    exit 1
+fi
+
 # Convenience variables
 
 if [[ -n "${MOVIM_UPLOAD_MAX_FILESIZE}" ]]; then
@@ -44,21 +61,6 @@ if [[ -v TESTING_MODE ]]; then
     export DAEMON_URL=${DAEMON_URL:-https://127.0.0.1:8443/}
     export DAEMON_DEBUG=${DAEMON_DEBUG:-true}
     export DAEMON_VERBOSE=${DAEMON_VERBOSE:-true}
-fi
-
-if [[ ! -v DB_HOST ]]; then
-    echo "The DB_HOST environment variable must be set." 1>&2
-    exit 1
-fi
-
-if [[ ! -v DB_PASSWORD ]]; then
-    echo "The DB_PASSWORD environment variable must be set." 1>&2
-    exit 1
-fi
-
-if [[ ! -v DAEMON_URL ]]; then
-    echo "The DAEMON_URL environment variable must be set." 1>&2
-    exit 1
 fi
 
 cat <<EOF > /var/www/movim/.env
