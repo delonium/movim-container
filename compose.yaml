@@ -8,6 +8,8 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 2s
+    # volumes: # Highly recommended to persist data between container restarts
+      # - movim_db:/var/lib/postgresql/data # Database data
   movim:
     image: 'ghcr.io/delonium/movim-container:latest'
     depends_on:
@@ -30,6 +32,7 @@ services:
       # - movim_picture_cache:/var/cache/picture_proxy # Picture proxy cache
 
 # volumes:
+#   movim_db:
 #   movim_cache:
 #   movim_log:
 #   movim_public:

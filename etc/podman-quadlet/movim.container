@@ -20,16 +20,13 @@ Volume=movim-proxy-cache.volume:/var/cache/picture_proxy
 
 # If you wish to bind mount data from an existing Movim installation:
 #
-# The :U mount option chowns the mounted data on the host to match the running
-# user in the container (www-data).
-#
 # Add the :Z mount option if your host os is using SELinux, like Fedora.
 #
-# Volume=/path-to/movim/cache:/var/www/movim/cache:U
-# Volume=/path-to/movim/log:/var/www/movim/log:U
-# Volume=/path-to/movim/public/cache:/var/www/movim/public/cache:U
-# Volume=/path-to/movim/public/images:/var/www/movim/public/images:U
-# Volume=/path-to/movim/public/emojis:/var/www/movim/public/emojis:U
+# Volume=/path-to/movim/cache:/var/www/movim/cache
+# Volume=/path-to/movim/log:/var/www/movim/log
+# Volume=/path-to/movim/public/cache:/var/www/movim/public/cache
+# Volume=/path-to/movim/public/images:/var/www/movim/public/images
+# Volume=/path-to/movim/public/emojis:/var/www/movim/public/emojis
 #
 # Then, mount the picture proxy as a named volume like above.
 
