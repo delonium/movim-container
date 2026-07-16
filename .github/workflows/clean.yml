@@ -19,4 +19,4 @@ jobs:
           image-tags: "!v* !master !latest"
           cut-off: 1w
           keep-n-most-recent: 30
-          dry-run: true
+          dry-run: false
