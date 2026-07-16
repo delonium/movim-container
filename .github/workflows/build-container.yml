@@ -6,6 +6,9 @@ on:
       movim-tag:
         required: true
         type: string
+      revision-number:
+        required: false
+        type: string
       publish:
         required: true
         type: boolean
@@ -30,6 +33,7 @@ jobs:
       meta-images: ghcr.io/${{ github.repository }}
       meta-tags: |
         type=schedule,pattern={{ date '[master-]YYYYMMDD' }},enable=${{ inputs.movim-tag == 'master' }}
+        type=raw,value=${{ format('{0}-rev{1}', inputs.movim-tag, inputs.revision-number) }},enable=${{ inputs.movim-tag != 'master' }}
         type=raw,value=${{ inputs.movim-tag }}
       meta-flavor: |
         latest=${{ startsWith(inputs.movim-tag, 'v') }}
