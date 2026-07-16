@@ -29,6 +29,7 @@ jobs:
       cache: true
       meta-images: ghcr.io/${{ github.repository }}
       meta-tags: |
+        type=schedule,pattern={{ date '[master-]YYYYMMDD' }},enable=${{ inputs.movim-tag == 'master' }}
         type=raw,value=${{ inputs.movim-tag }}
       meta-flavor: |
         latest=${{ startsWith(inputs.movim-tag, 'v') }}
