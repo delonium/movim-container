@@ -1,0 +1,22 @@
+name: Clean up GHCR
+
+on:
+  schedule:
+    - cron: '0 7 * * *'
+  workflow_dispatch:
+
+jobs:
+  prune-images:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    steps:
+      - uses: snok/container-retention-policy@d3bdcf5ce9b05f685154e4a16c39233b245e3d53 # v3.1.0
+        with:
+          account: user
+          token: ${{ secrets.GITHUB_TOKEN }}
+          image-names: movim-container
+          image-tags: "!v* !master !latest"
+          cut-off: 1w
+          keep-n-most-recent: 30
+          dry-run: true
