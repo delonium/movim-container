@@ -73,11 +73,19 @@ This repository checks for Movim stable releases weekly and builds the Movim mas
 | v0.34.1 | Pinned stable release |
 | master | Development branch rebuilt daily |
 
+Dated `master` tags are also available.
+
 ### Revisions
 
-This repository tags releases based on how and when the Movim repository tags releases. The only time release tags diverge is when a previously-built stable release is rebuilt with the latest changes from this repository. When this happens, a revision is published and the corresponding stable tag in the container registry is updated.
+This repository tags releases based on how and when the Movim repository tags releases. The only time release tags diverge is when a previously-built stable release is rebuilt with the latest changes from this repository. When this happens, a revision tag is published and the corresponding stable tag in the container registry is also updated.
 
-Revision releases look like this: `v0.34.1-revN`, where `N` is the incremented revision number.
+Revision tags look like this: `v0.34.1-revN`, where `N` is the incremented revision number.
+
+For the sake of pinning, the first build of a stable release has revision number `0`.
+
+### Image Retention Policy
+
+This repository always keeps tagged stable images (including all revisions). The only exceptions to this rule are dated `master` tags, only the 30 most recent ones are kept.
 
 ## Configuration
 
