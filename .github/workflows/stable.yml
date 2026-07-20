@@ -38,10 +38,10 @@ jobs:
       - name: Determine if container should be built and handle revisions
         id: check-tag
         env:
-          BUILD_REVISION: ${{ inputs.build-revision }}
+          BUILD_REVISION: ${{ inputs.build-revision || false }}
           MOVIM_TAG: ${{ steps.get-version.outputs.version }}
         run: |
-          if [[ -z "$(git tag -l ${{ steps.get-version.outputs.version }})" ]]; then
+          if [[ -z "$(git tag -l ${MOVIM_TAG})" ]]; then
             echo "should-build=true" >> "${GITHUB_OUTPUT}"
             exit 0
           else
