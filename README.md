@@ -165,6 +165,8 @@ The following paths in the container should be mounted in a named volume or bind
 
 ### Mounting Existing Data
 
-This container is based on Debian and runs Movim as the `www-data` user with uid/gid `33:33`. The container will automatically correct ownership as necessary upon startup (see the `CHOWN_DATA` variable in the [Configuration section](#container-only-environment-variables)).
+If you wish to mount data from an existing Movim installation, the Movim root is under `/var/www/movim` in the container. Each of the data directories in your Movim installation root should be bind-mounted to the respective container data directories described in the [Data Persistence](#data-persistence) section above.
+
+Do note that this container is based on Debian and runs Movim as the `www-data` user with uid/gid `33:33`. The container will automatically correct ownership as necessary upon startup (see the `CHOWN_DATA` variable in the [Configuration section](#container-only-environment-variables)).
 
 You can disable `CHOWN_DATA` by setting it to `0` if you wish to correct the ownership of bind mounts manually.

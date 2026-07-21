@@ -31,6 +31,16 @@ services:
       # - movim_emojis:/var/www/movim/public/emojis # Custom emoji packs
       # - movim_picture_cache:/var/cache/picture_proxy # Picture proxy cache
 
+      ## If you have an existing Movim installation:
+      #
+      # - /path-to/movim/cache:/var/www/movim/cache # Internal cache (templates and other system files)
+      # - /path-to/movim/log:/var/www/movim/log # PHP logs
+      # - /path-to/movim/public/cache:/var/www/movim/public/cache # Public caches (pictures, CSS, Javascript, etc.)
+      # - /path-to/movim/public/images:/var/www/movim/public/images # Profile pictures and banners
+      # - /path-to/movim/public/emojis:/var/www/movim/public/emojis # Custom emoji packs
+      #
+      ## Then mount the picture proxy cache as a named volume like above.
+
 # volumes:
 #   movim_db:
 #   movim_cache:
