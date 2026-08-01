@@ -5,26 +5,52 @@ on:
     - cron: '0 6 * * *'
   pull_request:
     paths:
-      - '**'
-      - '!README.md'
-      - '!compose.yaml'
-      - '!etc/**'
-      - '!.github/**'
-      - '.github/workflows/master.yml'
+      - 'Containerfile'
+      - 'container/**'
   push:
     branches:
       - main
     paths:
-      - '**'
-      - '!README.md'
-      - '!compose.yaml'
-      - '!etc/**'
-      - '!.github/**'
-      - '.github/workflows/master.yml'
+      - 'Containerfile'
+      - 'container/**'
   workflow_dispatch:
 
 jobs:
+  determine-should-publish:
+    runs-on: ubuntu-latest
+    outputs:
+      should-publish: "${{ steps.process-event.outputs.should-publish }}"
+    steps:
+      - name: Process workflow trigger event and determine publishing
+        id: process-event
+        env:
+          GH_TOKEN: ${{ secrets.VARIABLE_WRITE_TOKEN }}
+        run: |
+          case "${{ github.event_name }}" in 
+            pull_request)
+              # Never publish on pull requests.
+              echo "should-publish=false" >> "${GITHUB_OUTPUT}"
+              ;;
+            push)
+              # Always update master tag on push.
+              echo "should-publish=true" >> "${GITHUB_OUTPUT}"
+              ;;
+            schedule)
+              # Only publish if HEAD has changed since last run.
+              HEAD_JSON=$(curl -sL "https://api.github.com/repos/movim/movim/commits/heads/master")
+    
+              HEAD_SHA=$(jq -r '.sha // empty' <<<${HEAD_JSON})
+              if [[ "${{ vars.PREVIOUS_HEAD }}" != "${HEAD_SHA}" ]]; then
+                gh variable set PREVIOUS_HEAD --body "${HEAD_SHA}"
+                echo "should-publish=true" >> "${GITHUB_OUTPUT}"
+              else
+                echo "should-publish=false" >> "${GITHUB_OUTPUT}"
+              fi
+              ;;
+          esac
+
   build:
+    needs: [determine-should-publish]
     uses: ./.github/workflows/build-container.yml
     permissions:
       contents: read
@@ -32,4 +58,4 @@ jobs:
       #id-token: write
     with:
       movim-tag: master
-      publish: ${{ github.event_name != 'pull_request' }}
+      publish: ${{ needs.determine-should-publish.outputs.should-publish }}
