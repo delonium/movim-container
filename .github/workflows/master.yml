@@ -35,6 +35,10 @@ jobs:
               # Always update master tag on push.
               echo "should-publish=true" >> "${GITHUB_OUTPUT}"
               ;;
+            workflow_dispatch)
+              # Always update master tag on workflow dispatch.
+              echo "should-publish=true" >> "${GITHUB_OUTPUT}"
+              ;;
             schedule)
               # Only publish if HEAD has changed since last run.
               HEAD_JSON=$(curl -sL "https://api.github.com/repos/movim/movim/commits/heads/master")
