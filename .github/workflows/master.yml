@@ -62,4 +62,4 @@ jobs:
       #id-token: write
     with:
       movim-tag: master
-      publish: ${{ needs.determine-should-publish.outputs.should-publish }}
+      publish: ${{ needs.determine-should-publish.outputs.should-publish == 'true' }}
