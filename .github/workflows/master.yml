@@ -19,7 +19,7 @@ jobs:
   determine-should-publish:
     runs-on: ubuntu-latest
     outputs:
-      should-publish: "${{ steps.process-event.outputs.should-publish }}"
+      should-publish: ${{ steps.process-event.outputs.should-publish }}
     steps:
       - name: Process workflow trigger event and determine publishing
         id: process-event
@@ -41,7 +41,7 @@ jobs:
     
               HEAD_SHA=$(jq -r '.sha // empty' <<<${HEAD_JSON})
               if [[ "${{ vars.PREVIOUS_HEAD }}" != "${HEAD_SHA}" ]]; then
-                gh variable set PREVIOUS_HEAD --body "${HEAD_SHA}" --repo ${{ github.repository }}
+                gh variable set PREVIOUS_HEAD --body "${HEAD_SHA}" --repo "${{ github.repository }}"
                 echo "should-publish=true" >> "${GITHUB_OUTPUT}"
               else
                 echo "should-publish=false" >> "${GITHUB_OUTPUT}"
