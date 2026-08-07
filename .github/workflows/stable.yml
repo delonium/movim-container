@@ -12,7 +12,26 @@ on:
         default: false
 
 jobs:
+  check-lock:
+    runs-on: ubuntu-latest
+    outputs:
+      should-stop: ${{ steps.lock-inspect.outputs.should-stop }}
+    steps:
+      - name: Stop stable release if manually locked by repository
+        id: lock-inspect
+        env:
+          LOCK: ${{ vars.LOCK_STABLE_WORKFLOW == 'true' }}
+        run: |
+          if [[ ${LOCK} ]]; then
+            echo "::notice::Stable release was manually locked from executing 🔒️"
+            echo "should-stop=true" >> "${GITHUB_OUTPUT}"
+          else
+            echo "should-stop=false" >> "${GITHUB_OUTPUT}"
+          fi
+
   check-release:
+    needs: check-lock
+    if: needs.check-lock.outputs.should-stop != 'true'
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.get-version.outputs.version }}
