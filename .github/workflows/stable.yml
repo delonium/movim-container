@@ -22,7 +22,7 @@ jobs:
         env:
           LOCK: ${{ vars.LOCK_STABLE_WORKFLOW == 'true' }}
         run: |
-          if [[ ${LOCK} ]]; then
+          if ${LOCK}; then
             echo "::notice::Stable release was manually locked from executing 🔒️"
             echo "should-stop=true" >> "${GITHUB_OUTPUT}"
           else
