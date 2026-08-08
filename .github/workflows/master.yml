@@ -9,7 +9,7 @@ on:
       - 'container/**'
   push:
     branches:
-      - main
+      - '*'
     paths:
       - 'Containerfile'
       - 'container/**'
