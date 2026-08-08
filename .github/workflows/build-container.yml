@@ -33,8 +33,9 @@ jobs:
       meta-images: ghcr.io/${{ github.repository }}
       meta-tags: |
         type=schedule,pattern={{ date '[master-]YYYYMMDD' }},enable=${{ inputs.movim-tag == 'master' }}
-        type=raw,value=${{ format('{0}-rev{1}', inputs.movim-tag, inputs.revision-number) }},enable=${{ inputs.movim-tag != 'master' }}
-        type=raw,value=${{ inputs.movim-tag }}
+        type=ref,event=branch,prefix=br-,enable={{is_not_default_branch}}
+        type=raw,value=${{ format('{0}-rev{1}', inputs.movim-tag, inputs.revision-number) }},enable=${{ inputs.movim-tag != 'master' && inputs.revision-number != '' }}
+        type=raw,value=${{ inputs.movim-tag }},enable={{is_default_branch}}
       meta-flavor: |
         latest=${{ startsWith(inputs.movim-tag, 'v') }}
       # Do not spam sha-based image tags. See: https://github.com/docker/github-builder/issues/109
