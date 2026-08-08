@@ -73,9 +73,11 @@ This repository checks for Movim stable releases weekly and builds the Movim mas
 | v0.34.1 | Pinned stable release |
 | master | Development branch rebuilt daily |
 
-Dated `master` tags are also available.
+### Dated Master Tags
 
-### Revisions
+There are also dated master tags that look like `master-YYYYMMDD`. These will only be published if the Movim repository has changed since the latest dated master tag.
+
+### Revision Tags
 
 This repository tags releases based on how and when the Movim repository tags releases. The only time release tags diverge is when a previously-built stable release is rebuilt with the latest changes from this repository. When this happens, a revision tag is published and the corresponding stable tag in the container registry is also updated.
 
