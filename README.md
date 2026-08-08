@@ -63,31 +63,13 @@ You can run Movim daemon commands by using `exec` on the running container. For 
 
     podman compose exec movim php daemon.php setAdmin <JID>
 
-## Tags and Versioning
+## Pinning
 
-This repository checks for Movim stable releases weekly and builds the Movim master branch daily. Release notes contain changes to the container image between Movim stable releases.
+The `latest` tag references the latest stable Movim version. You can also pin your container to a specific version like so: 
 
-| Tag | Description |
-| --- | --- |
-| latest | The latest stable release |
-| v0.34.1 | Pinned stable release |
-| master | Development branch rebuilt daily |
+    ghcr.io/delonium/movim-container:v0.34.1
 
-### Dated Master Tags
-
-There are also dated master tags that look like `master-YYYYMMDD`. These will only be published if the Movim repository has changed since the latest dated master tag.
-
-### Revision Tags
-
-This repository tags releases based on how and when the Movim repository tags releases. The only time release tags diverge is when a previously-built stable release is rebuilt with the latest changes from this repository. When this happens, a revision tag is published and the corresponding stable tag in the container registry is also updated.
-
-Revision tags look like this: `v0.34.1-revN`, where `N` is the incremented revision number.
-
-For the sake of pinning, the first build of a stable release has revision number `0`.
-
-### Image Retention Policy
-
-This repository always keeps tagged stable images (including all revisions). The only exceptions to this rule are dated `master` tags, only the 30 most recent ones are kept.
+Please see the [Tags and Versioning](#tags-and-versioning) section for a complete list of tags and the image retention policy.
 
 ## Configuration
 
@@ -172,3 +154,39 @@ If you wish to mount data from an existing Movim installation, the Movim root is
 Note that this container is based on Debian and runs Movim as the `www-data` user with uid/gid `33:33`. The container will automatically correct ownership as necessary upon startup (see the `CHOWN_DATA` variable in the [Configuration section](#container-only-environment-variables)).
 
 You can disable `CHOWN_DATA` by setting it to `0` if you wish to correct the ownership of bind mounts manually.
+
+## Tags and Versioning
+
+This repository checks for Movim stable releases weekly and builds the Movim master branch daily. Release notes contain changes to the container image between Movim stable releases.
+
+| Tag | Description |
+| --- | --- |
+| latest | The latest stable release |
+| v0.34.1 | Pinned stable release |
+| master | Development branch rebuilt daily |
+
+### Dated Master Tags
+
+There are also dated master tags that look like `master-YYYYMMDD`. These will only be published if the Movim repository has changed since the latest dated master tag.
+
+### Revision Tags
+
+This repository tags releases based on how and when the Movim repository tags releases. The only time release tags diverge is when a previously-built stable release is rebuilt with the latest changes from this repository. When this happens, a revision tag is published and the corresponding stable tag in the container registry is also updated.
+
+Revision tags look like this: `v0.34.1-revN`, where `N` is the incremented revision number.
+
+For the sake of pinning, the first build of a stable release has revision number `0`.
+
+### Branch Tags
+
+Tags prefixed with `br-` represent development container images built from a specific branch from *this* repository.
+
+### Image Retention Policy
+
+This repository always keeps stable version tags, revision tags, and the `master` tag.
+
+The following other policies apply:
+| Tag | Retention |
+|---|---|
+| Dated master tags | Only the 30 most recent ones are kept |
+| Branch tags | Removed if older than 2 weeks |
