@@ -1,6 +1,6 @@
 <div align="center">
     <h1>Movim Container</h1>
-    <h4>An officially endorsed image maintained by the community.</h4>
+    <h4>An endorsed, community-maintained Movim image</h4>
     <img src="https://img.shields.io/github/v/release/delonium/movim-container?filter=!*-rev*&style=flat-square&label=Movim%20Release&color=%233D36C0">
     <a href="https://github.com/delonium/movim-container/actions/workflows/stable.yml">
         <img src="https://img.shields.io/github/actions/workflow/status/delonium/movim-container/stable.yml?style=flat-square&label=Latest">
@@ -11,6 +11,9 @@
 </div>
 
 ## About
+
+> [!NOTE]
+> This repository is currently a community-run placeholder, migration into the Movim organization is planned, provided all goes well.  
 
 Movim is a distributed social network built on the XMPP protocol. This repository is a community effort to package Movim as an OCI container that can be deployed with Docker and Podman.
 
