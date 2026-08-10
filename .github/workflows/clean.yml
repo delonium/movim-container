@@ -19,7 +19,7 @@ jobs:
           image-tags: "master-*"
           cut-off: 1w
           keep-n-most-recent: 30
-          dry-run: true
+          dry-run: false
     
       - uses: snok/container-retention-policy@d3bdcf5ce9b05f685154e4a16c39233b245e3d53 # v3.1.0
         with:
@@ -28,4 +28,4 @@ jobs:
           image-names: movim-container
           image-tags: "!v* !latest !master !master-*"
           cut-off: 2w
-          dry-run: true
+          dry-run: false
