@@ -69,7 +69,10 @@ The `latest` tag references the latest stable Movim version. You can also pin yo
 
     ghcr.io/delonium/movim-container:v0.34.1
 
-Please see the [Tags and Versioning](#tags-and-versioning) section for a complete list of tags and the image retention policy.
+See the [Tags and Versioning](#tags-and-versioning) section for a complete list of tags and the image retention policy.
+
+> [!NOTE]
+> The `master` tag can be pinned by digest, but a pinned digest is subject to this repository's retention policy. See the [Master Pinning](#master-pinning) section for more information.
 
 ## Configuration
 
@@ -99,7 +102,7 @@ If not empty, the Movim container is ran with a self-signed certificate for loca
 
 `CHOWN_DATA` **(default: `1`)**
 
-If set to `1`, the container will check the ownership of its data directories (see the [Data Persistence section](#data-persistence)) and chown them recursively as necessary. This is mainly useful for mounting data from an existing Movim installation.
+If set to `1`, the container will check the ownership of its data directories (see the [Data Persistence](#data-persistence) section) and chown them recursively as necessary. This is mainly useful for mounting data from an existing Movim installation.
 
 #### Tweaks
 
@@ -190,3 +193,9 @@ The following other policies apply:
 |---|---|
 | Dated master tags | Only the 30 most recent ones are kept |
 | Branch tags | Removed if older than 2 weeks |
+
+#### Master Pinning
+
+The `master` tag can be pinned by digest, but this digest will only persist as long as its corresponding dated tag does. As such, if you wish to update your instance only after reviewing changes on Movim's development branch, doing so with the dated master tags themselves, instead of using a `master` digest, may be preferable. The dated master tags allow easy reference to see if they exist in the container registry.
+
+Here is the rule of thumb: if you pin your instance to the latest dated master tag at the moment, **update the pin within 30 days to avoid referencing a pruned container image**.
