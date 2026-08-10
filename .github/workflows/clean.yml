@@ -17,6 +17,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           image-names: movim-container
           image-tags: "master-*"
+          tag-selection: tagged
           cut-off: 1w
           keep-n-most-recent: 30
           dry-run: true
