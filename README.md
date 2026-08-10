@@ -75,7 +75,7 @@ The `latest` tag references the latest stable Movim version. You can also pin yo
 See the [Tags and Versioning](#tags-and-versioning) section for a complete list of tags and the image retention policy.
 
 > [!NOTE]
-> The `master` tag can be pinned by digest, but a pinned digest is subject to this repository's retention policy. See the [Master Pinning](#master-pinning) section for more information.
+> Pinned `master` tag digests are subject to this repository's retention policy. See the [Master Pinning](#master-pinning) section for more information.
 
 ## Configuration
 
