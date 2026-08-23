@@ -6,7 +6,7 @@
         <img src="https://img.shields.io/github/actions/workflow/status/delonium/movim-container/stable.yml?style=flat-square&label=Latest">
     </a>
     <a href="https://github.com/delonium/movim-container/actions/workflows/master.yml">
-        <img src="https://img.shields.io/github/actions/workflow/status/delonium/movim-container/master.yml?style=flat-square&label=Master">
+        <img src="https://img.shields.io/github/actions/workflow/status/delonium/movim-container/master.yml?branch=main&style=flat-square&label=Master">
     </a>
 </div>
 
