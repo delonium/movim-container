@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Testing mode environment variables
+
+if [[ -v TESTING_MODE ]]; then
+    export DAEMON_URL=${DAEMON_URL:-https://127.0.0.1:8443/}
+    export DAEMON_DEBUG=${DAEMON_DEBUG:-true}
+    export DAEMON_VERBOSE=${DAEMON_VERBOSE:-true}
+fi
+
 # Required environment variables
 
 if [[ ! -v DB_HOST ]]; then
@@ -56,12 +64,6 @@ SUBST_VARS='${CONTAINER_MODE},${NGINX_CLIENT_MAX_BODY_SIZE}'
 envsubst "${SUBST_VARS}" < ${NGINX_CONF_TEMPLATE} > /etc/nginx/sites-available/default
 
 # Render Movim .env file
-
-if [[ -v TESTING_MODE ]]; then
-    export DAEMON_URL=${DAEMON_URL:-https://127.0.0.1:8443/}
-    export DAEMON_DEBUG=${DAEMON_DEBUG:-true}
-    export DAEMON_VERBOSE=${DAEMON_VERBOSE:-true}
-fi
 
 cat <<EOF > /var/www/movim/.env
 DB_DRIVER=${DB_DRIVER}
