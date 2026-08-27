@@ -17,6 +17,11 @@ if [[ ! -v DAEMON_URL ]]; then
     exit 1
 fi
 
+if [[ -v GALENER_XMPP_HOST && ! -v GALENER_XMPP_PASSWORD ]]; then
+    echo "The GALENER_XMPP_PASSWORD environment variable must be set if Galane is being used." 1>&2
+    exit 1
+fi
+
 # Convenience variables
 
 if [[ -n "${MOVIM_UPLOAD_MAX_FILESIZE}" ]]; then
@@ -64,6 +69,9 @@ if [[ -v TESTING_MODE ]]; then
 fi
 
 cat <<EOF > /var/www/movim/.env
+DAEMON_PORT=8080
+DAEMON_INTERFACE=127.0.0.1
+
 DB_DRIVER=${DB_DRIVER}
 DB_HOST=${DB_HOST}
 DB_PORT=${DB_PORT}
@@ -73,9 +81,10 @@ DB_PASSWORD=${DB_PASSWORD}
 DAEMON_URL=${DAEMON_URL}
 DAEMON_DEBUG=${DAEMON_DEBUG}
 DAEMON_VERBOSE=${DAEMON_VERBOSE}
-
-DAEMON_PORT=8080
-DAEMON_INTERFACE=127.0.0.1
+GALENER_XMPP_HOST=${GALENER_XMPP_HOST}
+GALENER_XMPP_PASSWORD=${GALENER_XMPP_PASSWORD}
+GALENER_XMPP_PORT=${GALENER_XMPP_PORT}
+GALENER_GALENE_PATH=${GALENER_GALENE_PATH}
 EOF
 
 chown www-data: /var/www/movim/.env

@@ -1,7 +1,16 @@
 # Top-level build arguments
 
 ARG BASE_IMAGE=docker.io/debian:trixie-slim
+ARG GO_IMAGE=docker.io/golang:trixie
+
+ARG MOVIM_TAG
+ARG MOVIM_ADD_URL=https://github.com/movim/movim.git#${MOVIM_TAG}
+
+ARG GALENE_ADD_URL=https://github.com/jech/galene.git
+
 ARG S6_OVERLAY_VERSION=3.2.3.0
+ARG S6_REPO_URL=https://github.com/just-containers/s6-overlay
+ARG S6_DOWNLOAD_URL=${S6_REPO_URL}/releases/download/v${S6_OVERLAY_VERSION}
 
 # Automatically set target architecture
 
@@ -11,7 +20,7 @@ ARG TARGETARCH
 
 FROM ${BASE_IMAGE} AS movim-s6-noarch
 
-ARG S6_OVERLAY_VERSION
+ARG S6_DOWNLOAD_URL
 ARG S6_OVERLAY_NOARCH_SHA256=b720f9d9340efc8bb07528b9743813c836e4b02f8693d90241f047998b4c53cf
 
 RUN export DEBIAN_FRONTEND=noninteractive && \
@@ -19,7 +28,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
  apt-get install -y --no-install-recommends xz-utils
 
 ADD --checksum=sha256:${S6_OVERLAY_NOARCH_SHA256} \
-    https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-noarch.tar.xz /tmp
+    ${S6_DOWNLOAD_URL}/s6-overlay-noarch.tar.xz /tmp
 RUN tar -C / -Jxpf /tmp/s6-overlay-noarch.tar.xz \
     && rm -f /tmp/s6-overlay-noarch.tar.xz
 
@@ -30,11 +39,11 @@ ENTRYPOINT ["/init"]
 
 FROM movim-s6-noarch AS movim-s6-amd64
 
-ARG S6_OVERLAY_VERSION
+ARG S6_DOWNLOAD_URL
 ARG S6_OVERLAY_AMD64_SHA256=a93f02882c6ed46b21e7adb5c0add86154f01236c93cd82c7d682722e8840563
 
 ADD --checksum=sha256:${S6_OVERLAY_AMD64_SHA256} \
-    https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-x86_64.tar.xz /tmp
+    ${S6_DOWNLOAD_URL}/s6-overlay-x86_64.tar.xz /tmp
 RUN tar -C / -Jxpf /tmp/s6-overlay-x86_64.tar.xz \
     && rm -f /tmp/s6-overlay-x86_64.tar.xz
 
@@ -42,13 +51,25 @@ RUN tar -C / -Jxpf /tmp/s6-overlay-x86_64.tar.xz \
 
 FROM movim-s6-noarch AS movim-s6-arm64
 
-ARG S6_OVERLAY_VERSION
+ARG S6_DOWNLOAD_URL
 ARG S6_OVERLAY_ARM64_SHA256=0952056ff913482163cc30e35b2e944b507ba1025d78f5becbb89367bf344581
 
 ADD --checksum=sha256:${S6_OVERLAY_ARM64_SHA256} \
-    https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-aarch64.tar.xz /tmp
+    ${S6_DOWNLOAD_URL}/s6-overlay-aarch64.tar.xz /tmp
 RUN tar -C / -Jxpf /tmp/s6-overlay-aarch64.tar.xz \
     && rm -f /tmp/s6-overlay-aarch64.tar.xz
+
+# Galene stage
+
+FROM ${GO_IMAGE} AS movim-galene
+
+ARG GALENE_ADD_URL
+
+WORKDIR /galene
+
+ADD ${GALENE_ADD_URL} .
+
+RUN CGO_ENABLED=0 go build -ldflags='-s -w' -o ./galene
 
 # Main build stage
 
@@ -123,6 +144,8 @@ ENV DAEMON_DEBUG=false \
     DB_DRIVER=pgsql \
     DB_DATABASE=movim \
     DB_USERNAME=movim \
+    GALENER_XMPP_PORT=5347 \
+    GALENER_GALENE_PATH=galene/galene \
     CHOWN_DATA=1 \
     PHP_MEMORY_LIMIT=256M \
     PHP_UPLOAD_MAX_FILESIZE=100M \
@@ -139,10 +162,12 @@ ENV DAEMON_DEBUG=false \
 
 WORKDIR /var/www/movim
 
-ARG MOVIM_TAG
-ADD --chown=www-data https://github.com/movim/movim.git#${MOVIM_TAG} .
+ARG MOVIM_ADD_URL
+ADD --chown=www-data ${MOVIM_ADD_URL} .
 
 RUN composer install
+
+COPY --from=movim-galene /galene/galene ./galene/galene
 
 RUN install -o www-data -d \
  # Create local directories
