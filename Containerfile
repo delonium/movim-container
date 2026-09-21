@@ -144,7 +144,6 @@ ENV DAEMON_DEBUG=false \
     DB_DRIVER=pgsql \
     DB_DATABASE=movim \
     DB_USERNAME=movim \
-    GALENER_XMPP_PORT=5347 \
     GALENER_GALENE_PATH=/var/www/movim/galene/galene \
     CHOWN_DATA=1 \
     PHP_MEMORY_LIMIT=256M \
