@@ -52,6 +52,9 @@ Environment=TESTING_MODE=true
 # You can also use an environment file.
 # EnvironmentFile=/path-to/env
 
+# If you are using Galene, set ulimit as recommended.
+# Ulimit=nofile=65535:65536
+
 # Using Podman secrets
 # Secret=movim-db-password,type=env,target=DB_PASSWORD
 
