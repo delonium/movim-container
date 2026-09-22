@@ -167,6 +167,8 @@ ADD --chown=www-data ${MOVIM_ADD_URL} .
 
 RUN composer install
 
+COPY --from=movim-galene /galene/galene ./galene/galene
+
 RUN install -o www-data -d \
  # Create local directories
  cache \
@@ -174,14 +176,10 @@ RUN install -o www-data -d \
  public/cache \
  public/images \
  public/emojis \
- # Create Galene static path
- galene/static \
  # Create picture proxy cache storage path
  /var/cache/picture_proxy \
  # Chown the working directory
  && chown -R www-data: .
-
-COPY --from=movim-galene /galene/galene ./galene/galene
 
 # s6-overlay will drop privileges
 
