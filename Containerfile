@@ -176,6 +176,8 @@ RUN install -o www-data -d \
  public/cache \
  public/images \
  public/emojis \
+ # Create Galene static path
+ galene/static \
  # Create picture proxy cache storage path
  /var/cache/picture_proxy \
  # Chown the working directory
