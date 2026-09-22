@@ -35,20 +35,22 @@ If you are hosting an XMPP server, please check out the [Movim Wiki](https://git
 * `amd64`
 * `arm64`
 
-## Compose File
+## Deployment
+
+### Compose File
 
 See the [compose.yaml](compose.yaml) file for a commented compose example with a Postgres database.
 
-## Podman Quadlets
+### Podman Quadlets
 
 See the [Podman Quadlets README](etc/podman-quadlet/README.md) for a collection of sample configuration files.
 
-## Quickstart and Testing Mode
+## Quickstart
 
 > [!WARNING]
 > Movim requires a real domain name with TLS to function fully. Testing mode may have degraded behavior, but it will work enough to do most tasks and to get a feel of Movim.
 
-Using the provided `compose.yaml` file without changes will launch Movim in testing mode, which allows trying Movim locally on your machine. You can launch the compose file with [Podman (main website)](https://podman.io/). Podman is a FOSS alternative to Docker that is available on all the main distributions.
+Using the provided `compose.yaml` file without changes will launch Movim in **testing mode**, which allows trying Movim locally on your machine. You can launch the compose file with [Podman (main website)](https://podman.io/). Podman is a FOSS alternative to Docker that is available on all the main distributions.
 
 Install `podman` and `podman-compose`, then run:
 
@@ -60,22 +62,28 @@ After a few moments, you can access Movim in your browser at the following URL:
 
 Note that testing mode uses a self-signed certificate, so you need to accept the security warning in your browser before opening the url.
 
-### Running Daemon Commands
+## Container Commands
 
-You can run Movim daemon commands by using `exec` on the running container. For example, here is how to set an admin when deploying Movim via the `compose.yaml` file:
+You can run Movim daemon commands by using `exec` on the running container. For example, here is how you can set an admin:
 
-    podman compose exec movim php daemon.php setAdmin <JID>
+    podman exec movim php daemon.php setAdmin <JID>
 
-## Pinning
+Where `podman` can be equivalently replaced with `docker`.
 
-The `latest` tag references the latest stable Movim version. You can also pin your container to a specific version like so: 
+## Tags and Versioning
 
-    ghcr.io/delonium/movim-container:v0.34.1
+| Tag | Description |
+| --- | --- |
+| latest | The latest stable release |
+| v0.34.1 | Pinned stable release |
+| master | Development branch rebuilt daily |
 
-See the [Tags and Versioning](#tags-and-versioning) section for a complete list of tags and the image retention policy.
+This repository checks for Movim stable releases weekly and builds the Movim master branch daily. Release notes contain changes to the container image between Movim stable releases.
+
+See the [Advanced Tagging](#advanced-tagging) section for dated master tags, revision tags, and the image retention policy.
 
 > [!NOTE]
-> Pinned `master` tag digests are subject to this repository's retention policy. See the [Master Pinning](#master-pinning) section for more information.
+> The retention policy has specific guidance for `master` tag pinning, see the [Master Pinning](#master-pinning) subsection for more information.
 
 ## Configuration
 
@@ -101,9 +109,8 @@ Movim uses [Galene](https://galene.org/) for scalable conference calls. This con
 
 Also, the [Galene install guide](https://galene.org/galene-install.html#run-galene-on-the-server) recommends adjusting the ulimit soft/hard limit for the number of open file descriptors to `65536`. Both the sample [compose.yaml](compose.yaml) and [Podman Quadlet files](etc/podman-quadlet/README.md) include this recommendation for reference.
 
-You can check to see if everything is configured properly by running the following command in the container with `exec`:
-
-    php daemon.php galener status
+> [!TIP]
+> Use the `php daemon.php galener status` [container command](#container-commands) to verify your configuration is working.
 
 ### Container-Only Environment Variables
 
@@ -179,15 +186,7 @@ Note that this container is based on Debian and runs Movim as the `www-data` use
 
 You can disable `CHOWN_DATA` by setting it to `0` if you wish to correct the ownership of bind mounts manually.
 
-## Tags and Versioning
-
-This repository checks for Movim stable releases weekly and builds the Movim master branch daily. Release notes contain changes to the container image between Movim stable releases.
-
-| Tag | Description |
-| --- | --- |
-| latest | The latest stable release |
-| v0.34.1 | Pinned stable release |
-| master | Development branch rebuilt daily |
+## Advanced Tagging
 
 ### Dated Master Tags
 
