@@ -99,7 +99,7 @@ Movim uses [Galene](https://galene.org/) for scalable conference calls. This con
 1. Follow the setup documentation for your XMPP server in [GALENER.md](https://github.com/movim/movim/blob/master/doc/GALENER.md#setting-up-galener).
 2. Set these environment variables: `GALENER_XMPP_HOST`, `GALENER_XMPP_PORT`, and `GALENER_XMPP_PASSWORD`.
 
-Also, the [Galene install guide](https://galene.org/galene-install.html#run-galene-on-the-server) recommends modifying the ulimit range for the number of open file descriptors, both the sample [compose.yaml](compose.yaml) and [Podman Quadlet files](etc/podman-quadlet/README.md) include this recommendation.
+Also, the [Galene install guide](https://galene.org/galene-install.html#run-galene-on-the-server) recommends adjusting the ulimit soft/hard limit for the number of open file descriptors to `65536`. Both the sample [compose.yaml](compose.yaml) and [Podman Quadlet files](etc/podman-quadlet/README.md) include this recommendation for reference.
 
 You can check to see if everything is configured properly by running the following command in the container with `exec`:
 
@@ -169,7 +169,11 @@ The following paths in the container should be mounted in a named volume or bind
 
 ### Mounting Existing Data
 
-If you wish to mount data from an existing Movim installation, the Movim root is under `/var/www/movim` in the container. Each of the data directories in your Movim installation root should be bind-mounted to the respective container data directories described in the table above. For example, if your Movim installation is installed under `/path-to/movim`, you should bind mount the `public/cache` directory with `/path-to/movim/public/cache:/var/www/movim/public/cache`, and so on.
+If you wish to mount data from an existing Movim installation, the Movim root is under `/var/www/movim` in the container. Each of the data directories in your Movim installation root should be bind-mounted to the respective container data directories described in the table above. For example, if your Movim installation is installed under `/path-to/movim`, you should bind mount the `public/cache` directory with:
+
+    /path-to/movim/public/cache:/var/www/movim/public/cache 
+
+and so on for each data directory.
 
 Note that this container is based on Debian and runs Movim as the `www-data` user with uid/gid `33:33`. The container will automatically correct ownership as necessary upon startup (see the `CHOWN_DATA` variable in the [Configuration section](#container-only-environment-variables)).
 
