@@ -149,7 +149,7 @@ You can adjust common PHP and NGINX configuration options.
 
 If not empty, configures both NGINX and PHP with a maximum uploaded file size. This is the same as setting the following tweaks to the same value: `PHP_UPLOAD_MAX_FILESIZE`, `PHP_POST_MAX_SIZE`, and `NGINX_CLIENT_MAX_BODY_SIZE`.
 
-For example, if you wish to only allow file uploads under 80M, set this tweak to `80M`.
+For example, if you wish to only allow file uploads under 80MB, set this tweak to `80M`.
 
 ## Data Persistence
 
