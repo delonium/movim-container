@@ -23,7 +23,7 @@ Movim is a distributed social network built on the XMPP protocol. This repositor
 
 ## Architecture Overview
 
-Movim requires a *webserver*, *PHP process manager (php-fpm)*, *database*, and *XMPP server*. This container image packages the webserver and php-fpm to host the Movim source. A [compose file](#compose-file) is provided to showcase a basic deployment **without an XMPP server**.
+Movim requires at the minimum a *webserver*, *PHP process manager (php-fpm)*, *database*, and *XMPP server*. New in version 0.35, *[Galene](#galene)* can also be used for scalable conference calls. This container image packages a webserver, php-fpm, and Galene alongside the Movim source. A [compose file](#compose-file) is provided to showcase a basic deployment **without an XMPP server**.
 
 > [!NOTE]
 > Movim does not include an XMPP server. If you wish to self-host Movim with an account under your own domain, consider hosting an XMPP server like [ejabberd](https://ejabberd.im/) (recommended) or [Prosody](https://prosody.im/).
@@ -92,6 +92,19 @@ The only **required** environment variables are:
 > [!WARNING]
 > In production, the Movim container should be served by a reverse proxy that handles TLS.
 
+### Galene
+
+Movim uses [Galene](https://galene.org/) for scalable conference calls. This container includes the Galene binary, in order to use it you need to:
+
+1. Follow the setup documentation for your XMPP server in [GALENER.md](https://github.com/movim/movim/blob/master/doc/GALENER.md#setting-up-galener).
+2. Set these environment variables: `GALENER_XMPP_HOST`, `GALENER_XMPP_PORT`, and `GALENER_XMPP_PASSWORD`.
+
+Also, the [Galene install guide](https://galene.org/galene-install.html#run-galene-on-the-server) recommends modifying the ulimit range for the number of open file descriptors, both the sample [compose.yaml](compose.yaml) and [Podman Quadlet files](etc/podman-quadlet/README.md) include this recommendation.
+
+You can check to see if everything is configured properly by running the following command in the container with `exec`:
+
+    php daemon.php galener status
+
 ### Container-Only Environment Variables
 
 #### General
@@ -120,6 +133,7 @@ You can adjust common PHP and NGINX configuration options.
 | PHP_UPLOAD_MAX_FILESIZE | 100M |
 | PHP_POST_MAX_SIZE | 100M |
 | PHP_OPCACHE_MEMORY | 256 |
+| PHP_FPM_PM_CONTROL | dynamic |
 | PHP_FPM_PM_MAX_CHILDREN | 20 |
 | PHP_FPM_PM_START_SERVERS | 2 |
 | PHP_FPM_PM_MIN_SPARE_SERVERS | 1 |
