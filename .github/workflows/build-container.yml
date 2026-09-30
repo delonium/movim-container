@@ -29,7 +29,9 @@ jobs:
       file: Containerfile
       build-args: |
         MOVIM_TAG=${{ inputs.movim-tag }}
-      cache: true
+      cache: ${{ github.event_name != 'pull_request' }}
+      cache-scope: movim
+      cache-mode: max
       meta-images: ghcr.io/${{ github.repository }}
       meta-tags: |
         type=schedule,pattern={{ date '[master-]YYYYMMDD' }},enable=${{ inputs.movim-tag == 'master' }}
