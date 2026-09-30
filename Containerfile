@@ -6,7 +6,8 @@ ARG GO_IMAGE=docker.io/golang:trixie
 ARG MOVIM_TAG
 ARG MOVIM_ADD_URL=https://github.com/movim/movim.git#${MOVIM_TAG}
 
-ARG GALENE_ADD_URL=https://github.com/jech/galene.git
+ARG GALENE_VERSION=1.2.1
+ARG GALENE_ADD_URL=https://github.com/jech/galene.git#galene-${GALENE_VERSION}
 
 ARG S6_OVERLAY_VERSION=3.2.3.0
 ARG S6_REPO_URL=https://github.com/just-containers/s6-overlay
