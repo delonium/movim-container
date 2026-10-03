@@ -90,6 +90,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
  php-pgsql \
  php-xml \
  php-bcmath \
+ php-intl \
  php-fpm \
  nginx \
  gettext-base \
