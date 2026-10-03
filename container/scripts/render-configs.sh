@@ -25,8 +25,9 @@ if [[ ! -v DAEMON_URL ]]; then
     exit 1
 fi
 
-if [[ -v GALENER_XMPP_HOST && ! -v GALENER_XMPP_PASSWORD ]]; then
-    echo "The GALENER_XMPP_PASSWORD environment variable must be set if Galane is being used." 1>&2
+if [[ -v GALENER_XMPP_HOST && ! -v GALENER_XMPP_IP && ! -v GALENER_XMPP_PASSWORD ]]; then
+    echo "Both the GALENER_XMPP_IP and GALENER_XMPP_PASSWORD \
+          environment variables must be set if Galane is being used." 1>&2
     exit 1
 fi
 
@@ -84,6 +85,7 @@ DAEMON_URL=${DAEMON_URL}
 DAEMON_DEBUG=${DAEMON_DEBUG}
 DAEMON_VERBOSE=${DAEMON_VERBOSE}
 GALENER_XMPP_HOST=${GALENER_XMPP_HOST}
+GALENER_XMPP_IP=${GALENER_XMPP_IP}
 GALENER_XMPP_PASSWORD=${GALENER_XMPP_PASSWORD}
 GALENER_XMPP_PORT=${GALENER_XMPP_PORT}
 GALENER_GALENE_PATH=${GALENER_GALENE_PATH}

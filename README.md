@@ -105,7 +105,7 @@ The only **required** environment variables are:
 Movim uses [Galene](https://galene.org/) for scalable conference calls. This container includes the Galene binary, in order to use it you need to:
 
 1. Follow the setup documentation for your XMPP server in [GALENER.md](https://github.com/movim/movim/blob/master/doc/GALENER.md#setting-up-galener).
-2. Set these environment variables: `GALENER_XMPP_HOST`, `GALENER_XMPP_PORT`, and `GALENER_XMPP_PASSWORD`.
+2. Set these environment variables: `GALENER_XMPP_HOST`, `GALENER_XMPP_IP`, `GALENER_XMPP_PORT`, and `GALENER_XMPP_PASSWORD`.
 
 Also, the [Galene install guide](https://galene.org/galene-install.html#run-galene-on-the-server) recommends adjusting the ulimit soft/hard limit for the number of open file descriptors to `65536`. Both the sample [compose.yaml](compose.yaml) and [Podman Quadlet files](etc/podman-quadlet/README.md) include this recommendation for reference.
 
