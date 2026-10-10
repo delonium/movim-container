@@ -144,4 +144,4 @@ jobs:
           generate_release_notes: true
           append_body: true
           body: |
-            **Movim release notes**: [${{ needs.check-release.outputs.version }}](https://github.com/movim/movim/releases/tag/${{ needs.check-release.outputs.version }}).
+            **Movim Release Notes**: [${{ needs.check-release.outputs.version }}](https://github.com/movim/movim/releases/tag/${{ needs.check-release.outputs.version }})

@@ -12,6 +12,6 @@ changelog:
     - title: Breaking Changes
       labels:
         - breaking-change
-    - title: Other
+    - title: General Changes
       labels:
         - '*'
