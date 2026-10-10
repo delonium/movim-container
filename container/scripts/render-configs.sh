@@ -27,7 +27,7 @@ fi
 
 if [[ -v GALENER_XMPP_HOST && ! -v GALENER_XMPP_IP && ! -v GALENER_XMPP_PASSWORD ]]; then
     echo "Both the GALENER_XMPP_IP and GALENER_XMPP_PASSWORD \
-          environment variables must be set if Galane is being used." 1>&2
+          environment variables must be set if Galene is being used." 1>&2
     exit 1
 fi
 
