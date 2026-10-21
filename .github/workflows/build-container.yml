@@ -16,6 +16,10 @@ on:
         required: false
         type: boolean
         default: false
+      fresh-packages:
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   build:
@@ -33,6 +37,7 @@ jobs:
       file: Containerfile
       build-args: |
         MOVIM_TAG=${{ inputs.movim-tag }}
+        FRESH_PACKAGES=${{ inputs.fresh-packages }}
       cache: ${{ !inputs.ignore-cache && (github.event_name != 'pull_request') }}
       cache-scope: movim
       cache-mode: max

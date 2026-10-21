@@ -15,8 +15,8 @@ on:
       - 'container/**'
   workflow_dispatch:
     inputs:
-      ignore-cache:
-        description: 'Determines whether build cache should be ignored for this build.'
+      fresh-packages:
+        description: 'Forcefully invalidates the apt package build layer to install latest packages.'
         required: false
         default: false
         type: boolean
@@ -69,4 +69,4 @@ jobs:
     with:
       movim-tag: master
       publish: ${{ needs.determine-should-publish.outputs.should-publish == 'true' }}
-      ignore-cache: ${{ github.event_name == 'workflow_dispatch' && inputs.ignore-cache }}
+      fresh-packages: ${{ github.event_name == 'workflow_dispatch' && inputs.fresh-packages }}

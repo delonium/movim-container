@@ -1,9 +1,15 @@
+# Required build arguments
+# MOVIM_TAG         The Movim tag to build against.
+# FRESH_PACKAGES    A boolean to invalidate the build cache for the apt packages.
+
+ARG MOVIM_TAG
+ARG FRESH_PACKAGES
+
 # Top-level build arguments
 
 ARG BASE_IMAGE=docker.io/debian:trixie-slim
 ARG GO_IMAGE=docker.io/golang:trixie
 
-ARG MOVIM_TAG
 ARG MOVIM_ADD_URL=https://github.com/movim/movim.git#${MOVIM_TAG}
 
 ARG GALENE_VERSION=1.2.1
@@ -77,6 +83,7 @@ RUN CGO_ENABLED=0 go build -ldflags='-s -w' -o ./galene
 FROM movim-s6-${TARGETARCH}
 
 RUN export DEBIAN_FRONTEND=noninteractive \
+ && echo "Fresh packages: ${FRESH_PACKAGES}" \
  && apt-get update \
  && apt-get install -y --no-install-recommends \
  composer \
