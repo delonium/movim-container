@@ -14,6 +14,12 @@ on:
       - 'Containerfile'
       - 'container/**'
   workflow_dispatch:
+    inputs:
+      ignore-cache:
+        description: 'Determines whether build cache should be ignored for this build.'
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   determine-should-publish:
@@ -42,7 +48,7 @@ jobs:
             schedule)
               # Only publish if HEAD has changed since last run.
               HEAD_JSON=$(curl -sL "https://api.github.com/repos/movim/movim/commits/heads/master")
-    
+
               HEAD_SHA=$(jq -r '.sha // empty' <<<${HEAD_JSON})
               if [[ "${{ vars.PREVIOUS_HEAD }}" != "${HEAD_SHA}" ]]; then
                 gh variable set PREVIOUS_HEAD --body "${HEAD_SHA}" --repo "${{ github.repository }}"
@@ -63,3 +69,4 @@ jobs:
     with:
       movim-tag: master
       publish: ${{ needs.determine-should-publish.outputs.should-publish == 'true' }}
+      ignore-cache: ${{ github.event_name == 'workflow_dispatch' && inputs.ignore-cache }}

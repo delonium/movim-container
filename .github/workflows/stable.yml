@@ -10,6 +10,11 @@ on:
         required: false
         type: boolean
         default: false
+      ignore-cache:
+        description: 'Determines whether build cache should be ignored for this build.'
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   check-lock:
@@ -104,6 +109,7 @@ jobs:
       movim-tag: ${{ needs.check-release.outputs.version }}
       revision-number: ${{ needs.check-release.outputs.revision-number || '0' }}
       publish: true
+      ignore-cache: ${{ github.event_name == 'workflow_dispatch' && inputs.ignore-cache }}
 
   release:
     needs: [check-release, build-and-publish]
