@@ -165,7 +165,7 @@ The following paths in the container should be mounted in a named volume or bind
 | `/var/www/movim/public/cache` | Public caches (pictures, CSS, Javascript, etc.) |
 | `/var/www/movim/public/images` | Profile pictures and banners |
 | `/var/www/movim/public/emojis` | Custom emoji packs |
-| `/var/cache/picture_proxy` | [Picture proxy cache](https://github.com/movim/movim/blob/master/INSTALL.md#53-picture-proxy-cache) storage |
+| `/var/cache/picture_proxy` | [Picture proxy cache](https://github.com/movim/movim/blob/master/INSTALL.md#73-picture-proxy-cache) storage |
 
 > [!TIP]
 > See the comments in the example [compose.yaml](compose.yaml) file for reference on how to do this in a compose file.
@@ -215,3 +215,36 @@ The following other policies apply:
 The `master` tag can be pinned by digest, but this digest will only persist as long as its corresponding dated tag does. As such, if you wish to update your instance only after reviewing changes on Movim's development branch, doing so with the dated master tags themselves, instead of using a `master` digest, may be preferable. The dated master tags allow easy reference to see if they exist in the container registry.
 
 Here is the rule of thumb: if you pin your instance to the latest dated master tag at the moment, **update the pin within 30 days to avoid referencing a pruned container image**.
+
+## Odds and Ends
+
+### Contributing to Movim
+
+You can deploy your own Movim checkout by following the general advice in the [Mounting Existing Data](#mounting-existing-data) section.
+
+    git clone https://github.com/my-user/movim.git my-movim
+    cd my-movim
+    git checkout -b my-changes
+
+Where `https://github.com/my-user/movim.git` is your fork of Movim. 
+
+Then, in your [compose.yaml](compose.yaml) file:
+
+```
+volumes:
+  - ./my-movim/database:/var/www/movim/database
+  - ./my-movim/src:/var/www/movim/src
+  - ./my-movim/app:/var/www/movim/app
+  - ./my-movim/config:/var/www/movim/config
+  - ./my-movim/public:/var/www/movim/public
+  - ./my-movim/workers:/var/www/movim/workers
+  - ./my-movim/locales:/var/www/movim/locales
+```
+
+> [!NOTE]
+> Eventually, this container image will build the `master` tag upon each commit made to Movim's development branch rather than only once daily, which will make the concerns below unnecessary.
+
+#### Advice
+* If you're using an existing Movim database, keep in mind that mounting a newer `master` than what your container was built with may introduce database migrations when mounting the `./my-movim/database` directory.
+  
+* The exhaustive list of mounts is mainly to shadow the Movim version the container image was built with, since your checkout might have newer changes. You can actually get away with fewer mounts. For instance, lets say there have been changes since 06:00 UTC on Movim `master` that only includes files under `src/`, then technically only the `./my-movim/src` directory needs to be mounted along with the directories your checkout changes.
