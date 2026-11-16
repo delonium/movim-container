@@ -72,9 +72,9 @@ Where `podman` can be equivalently replaced with `docker`.
 | --- | --- |
 | latest | The latest stable release |
 | v0.34.1 | Pinned stable release |
-| master | Development branch rebuilt daily |
+| master | Built upon each commit to the development branch |
 
-This repository checks for Movim stable releases weekly and builds the Movim master branch daily. Release notes contain changes to the container image between Movim stable releases.
+This repository's container tags are kept in sync with changes in the upstream [Movim repository](https://github.com/movim/movim). Release notes contain changes to the container image between Movim stable releases.
 
 See the [Advanced Tagging](#advanced-tagging) section for dated master tags, revision tags, and the image retention policy.
 
@@ -228,23 +228,12 @@ You can deploy your own Movim checkout by following the general advice in the [M
 
 Where `https://github.com/my-user/movim.git` is your fork of Movim. 
 
-Then, in your [compose.yaml](compose.yaml) file:
+Next, ensure your fork is up-to-date and pull the latest `master` tag. 
 
+Then, in your [compose.yaml](compose.yaml) file:
 ```
 volumes:
-  - ./my-movim/database:/var/www/movim/database
   - ./my-movim/src:/var/www/movim/src
   - ./my-movim/app:/var/www/movim/app
-  - ./my-movim/config:/var/www/movim/config
-  - ./my-movim/public:/var/www/movim/public
-  - ./my-movim/workers:/var/www/movim/workers
-  - ./my-movim/locales:/var/www/movim/locales
+  # And so on for each directory you make changes in...
 ```
-
-> [!NOTE]
-> Eventually, this container image will build the `master` tag upon each commit made to Movim's development branch rather than only once daily, which will make the concerns below unnecessary.
-
-#### Advice
-* If you're using an existing Movim database, keep in mind that mounting a newer `master` than what your container was built with may introduce database migrations when mounting the `./my-movim/database` directory.
-  
-* The exhaustive list of mounts is mainly to shadow the Movim version the container image was built with, since your checkout might have newer changes. You can actually get away with fewer mounts. For instance, lets say there have been changes since 06:00 UTC on Movim `master` that only includes files under `src/`, then technically only the `./my-movim/src` directory needs to be mounted along with the directories your checkout changes.
